@@ -4,8 +4,7 @@
 <div class="p-0 p-sm-4">
     <div class="border bg-white p-0 p-sm-3">
         <div class="container-fluid">
-            <x-search searchRoute="{{ route('admin.students.index') }}" addRoute="{{ route('admin.students.create') }}"
-                searchMessage='Search any student here'></x-search>
+            <x-search searchRoute="{{ route('admin.students.index') }}" addRoute="{{ route('admin.students.create') }}" searchMessage='Search any student here'></x-search>
 
             <div class="table-responsive mt-3">
                 <table class="table table-bordered table-striped align-middle" style="font-size: 14px;">
@@ -44,22 +43,21 @@
                             <td>{{ $student->training_completed ? 'Completed' : 'Not yet completed' }}</td>
                             <td>
                                 @if($student->accepted == 0)
-                                <span class="rounded-5 px-3 text-bg-warning">Pending</span>
+                                <a href="#" class="badge text-bg-success text-decoration-none">Accept</a>
+                                <a href="#" class="badge text-bg-danger text-decoration-none" data-confirm-delete="true">Reject</a>
                                 @elseif($student->accepted == 1)
-                                <span class="rounded-5 px-3 text-bg-success">Accepted</span>
+                                <span class="badge text-bg-success">Accepted</span>
                                 @endif
                             </td>
                             <td>
                                 <div class="d-flex justify-content-end">
                                     <div class="dropdown">
-                                        <button class="dropdown-toggle border-1" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
+                                        <button class="dropdown-toggle border-1" data-bs-toggle="dropdown" aria-expanded="false">
                                             Action
                                         </button>
                                         <ul class="dropdown-menu text-small shadow position-fixed rounded-0">
                                             <li>
-                                                <a href="{{ route('admin.students.qrcode', ['id' => $student->id]) }}"
-                                                    class="dropdown-item">
+                                                <a href="{{ route('admin.students.qrcode', ['id' => $student->id]) }}" class="dropdown-item">
                                                     Download Qr Code
                                                 </a>
                                             </li>
@@ -72,10 +70,6 @@
                                                 <a href="" class="dropdown-item">
                                                     Edit
                                                 </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ route('admin.students.destroy', ['id' => $student->id]) }}"
-                                                    class="dropdown-item" data-confirm-delete="true">Delete</a>
                                             </li>
                                         </ul>
                                     </div>

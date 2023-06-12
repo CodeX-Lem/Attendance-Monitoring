@@ -1,5 +1,5 @@
 @extends('admin.layouts.layout')
-@section('title','Courses')
+@section('title','Users')
 @section('content')
 <div class="p-0 p-sm-4">
     <div class="border bg-white p-0 p-sm-3">
