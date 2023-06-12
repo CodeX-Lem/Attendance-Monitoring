@@ -24,10 +24,8 @@ use App\Models\UserModel;
 
 Route::get('/', function () {
 
-    if (Session::has('loginId')) {
-        $user = UserModel::where('id', '=', Session::get('loginId'))->first();
-
-        if ($user->role == 1) {
+    if (Session::has('isAdmin')) {
+        if (Session::get('isAdmin') == true) {
             return redirect()->route('admin.dashboard');
         } else {
         }
@@ -65,8 +63,8 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::put('/users/change-password/{id}', [UserController::class, 'changepass'])->name('admin.users.changepass');
     Route::post('/users/store', [UserController::class, 'store'])->name('admin.users.store');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
-    Route::get('/users/change-username/{id}', [UserController::class, 'showChangeUsername'])->name('admin.users.show-change-username');
-    Route::put('users/change-username/{id}', [UserController::class, 'changeUsername'])->name('admin.users.change-username');
+    Route::get('/users/change-admin-profile', [UserController::class, 'showChangeAdminProfile'])->name('admin.users.show-change-admin-profile');
+    Route::post('/users/change-admin-profile', [UserController::class, 'changeAdminProfile'])->name('admin.users.change-profile');
 
     Route::get('/students/qrcode{id}', [QrCodeController::class, 'download'])->name('admin.students.qrcode');
 

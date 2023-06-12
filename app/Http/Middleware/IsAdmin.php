@@ -18,17 +18,15 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Session::has('loginId')) {
+        if (!Session::has('isAdmin')) {
             return redirect('/')->with('message', 'You have to login first');
         }
 
-        $user = UserModel::where('id', '=', Session::get('loginId'))->first();
-
-        if ($user->role == 1) {
-            View::share('currentUser', $user);
+        if (Session::get('isAdmin') == true) {
+            View::share(['adminUsername' => env('ADMIN_USERNAME'), 'adminPassword' => env('ADMIN_PASSWORD')]);
             return $next($request);
         } else {
-            Session::forget('loginId');
+            Session::forget('isAdmin');
             return redirect('/')->with('message', 'Please log in as admin to continue');
         }
     }

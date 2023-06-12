@@ -5,7 +5,7 @@ namespace App\Http\Requests\Users;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ChangeUsernameRequest extends FormRequest
+class ChangeAdminProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,6 +25,7 @@ class ChangeUsernameRequest extends FormRequest
         $userId = $this->route('id');
         return [
             'username' => ['required', 'min:6', Rule::unique('users', 'username')->ignore($userId)],
+            'password' => ['required', 'min:8', 'confirmed'],
         ];
     }
 }

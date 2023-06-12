@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Users\ChangeAdminProfileRequest;
 use App\Http\Requests\Users\ChangePassRequest;
-use App\Http\Requests\Users\ChangeUsernameRequest;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Models\UserModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -125,29 +126,52 @@ class UserController extends Controller
         }
     }
 
-    public function showChangeUsername($id)
+    public function showChangeAdminProfile()
     {
         $previous = URL::previous();
         $current = URL::current();
         $previousUrl = $previous == $current ? route('admin.users.index') : $previous;
 
-        $user = UserModel::where('id', '=', $id)->first();
-        return view('admin.users.change-username', ['previousUrl' => $previousUrl, 'user' => $user]);
+        $adminUsername = env('ADMIN_USERNAME');
+        $adminPassword = env('ADMIN_PASSWORD');
+        return view('admin.users.change-admin-profile', ['previousUrl' => $previousUrl, 'adminUsername' => $adminUsername, 'adminPassword' => $adminPassword]);
     }
 
-    public function changeUsername(ChangeUsernameRequest $request, $id)
+    public function changeAdminProfile(ChangeAdminProfileRequest $request)
     {
         try {
-            $validatedData = $request->validated();
-            $data = ['username' => $validatedData['username']];
+            $adminUsername = $request->input('username');
+            $adminPassword = $request->input('password');
 
-            $user = UserModel::where('id', '=', $id)->first();
-            $user->update($data);
-            Alert::success('Success', 'Username has been changed');
+            // Update the values in the configuration
+            config(['app.admin_username' => $adminUsername]);
+            config(['app.admin_password' => $adminPassword]);
+
+            // Persist the changes in the .env file
+            $this->updateEnvFile('ADMIN_USERNAME', $adminUsername);
+            $this->updateEnvFile('ADMIN_PASSWORD', $adminPassword);
+
+            // Clear the config cache to reflect the changes
+            Artisan::call('config:clear');
+
+            Alert::success('Success', 'Admin credentials has been changed');
         } catch (Exception $e) {
-            Alert::error('Error', 'An error occured while changing username');
+            Alert::error('Error', 'An error occured while changing admin credentials');
         } finally {
-            return redirect($request->input('previous_url'));
+            return redirect()->back();
+        }
+    }
+
+    private function updateEnvFile($key, $value)
+    {
+        $envFile = base_path('.env');
+
+        if (file_exists($envFile)) {
+            file_put_contents($envFile, str_replace(
+                $key . '=' . env($key),
+                $key . '=' . $value,
+                file_get_contents($envFile)
+            ));
         }
     }
 
@@ -155,28 +179,27 @@ class UserController extends Controller
     {
         $username = $request->input('username');
         $password = $request->input('password');
-        $user = UserModel::where('username', '=', $username)->first();
-
-        if ($user) {
-            if (Hash::check($password, $user->password)) {
-                $role = $user->role;
-                Session::put('loginId', $user->id);
-                if ($role == 1) {
-                    return redirect()->route('admin.dashboard');
-                } else {
-                }
-            } else {
-                return redirect()->back()->with('message', 'Invalid username or password');
-            }
-        } else {
-            return redirect()->back()->with('message', 'Invalid username or password');
+        $adminUsername = env('ADMIN_USERNAME', 'admin');
+        $adminPassword = env('ADMIN_PASSWORD', '12345678');
+        if ($username == $adminUsername && $password == $adminPassword) {
+            Session::put('isAdmin', true);
+            return redirect()->route('admin.dashboard');
         }
+
+        $user = UserModel::where('username', $username)->first();
+
+        if ($user && Hash::check($password, $user->password)) {
+            Session::put('isAdmin', false);
+            return 'User is regular';
+        }
+
+        return redirect()->back()->with('message', 'Invalid username or password');
     }
 
     public function logout()
     {
-        if (Session::has('loginId')) {
-            Session::pull('loginId');
+        if (Session::has('isAdmin')) {
+            Session::pull('isAdmin');
             return redirect('/');
         }
     }
