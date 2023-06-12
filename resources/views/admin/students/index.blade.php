@@ -44,7 +44,7 @@
                             <td>
                                 @if($student->accepted == 0)
                                 <a href="#" class="badge text-bg-success text-decoration-none">Accept</a>
-                                <a href="#" class="badge text-bg-danger text-decoration-none" data-confirm-delete="true">Reject</a>
+                                <a href="{{ route('admin.students.destroy', ['id' => $student->id]) }}" class="badge text-bg-danger text-decoration-none" data-confirm-delete="true">Reject</a>
                                 @elseif($student->accepted == 1)
                                 <span class="badge text-bg-success">Accepted</span>
                                 @endif
