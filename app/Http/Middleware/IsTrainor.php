@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
-class IsAdmin
+class IsTrainor
 {
     /**
      * Handle an incoming request.
@@ -22,12 +22,12 @@ class IsAdmin
             return redirect('/')->with('message', 'You have to login first');
         }
 
-        if (Session::get('isAdmin') == true) {
-            // View::share(['adminUsername' => config('adminCredentials.username'), 'adminPassword' => config('adminCredentials.password')]);
+        if (Session::get('isAdmin') == false) {
             return $next($request);
         } else {
             Session::forget('isAdmin');
-            return redirect('/')->with('message', 'Please log in as admin to continue');
+            Session::forget('trainor_id');
+            return redirect('/')->with('message', 'Only trainors can access this module');
         }
     }
 }

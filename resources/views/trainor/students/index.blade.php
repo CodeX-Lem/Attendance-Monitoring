@@ -4,7 +4,7 @@
 <div class="p-0 p-sm-4">
     <div class="border bg-white p-0 p-sm-3">
         <div class="container-fluid">
-            <x-search searchRoute="{{ route('admin.students.index') }}" addRoute="{{ route('admin.students.create') }}" searchMessage='Search any student here'></x-search>
+            <x-search searchRoute="" addRoute="" searchMessage='Search any student here'></x-search>
 
             <div class="table-responsive mt-3">
                 <table class="table table-bordered table-striped align-middle" style="font-size: 14px;">
@@ -98,16 +98,6 @@
                                                     View Info
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    Edit
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ route('admin.students.destroy',['id' => $student->id]) }}" class="dropdown-item" data-confirm-delete="true">
-                                                    Delete
-                                                </a>
-                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -116,7 +106,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <x-pagination :pageData="$students" route="{{ route('admin.students.index') }}"></x-pagination>
+                <x-pagination :pageData="$students" route=""></x-pagination>
             </div>
         </div>
     </div>

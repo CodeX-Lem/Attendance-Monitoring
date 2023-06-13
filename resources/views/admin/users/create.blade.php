@@ -41,9 +41,9 @@
                     <label class="form-label">Trainor <span class="text-danger">*</span></label>
                     <select class="form-select shadow-none rounded-0" name="trainor_id">
                         <option value="" selected>--Select Trainor--</option>
-                        @foreach($trainors as $trainor)
-                        <option value="{{ $trainor->id }}" @if(old('trainor_id')==$trainor->id) selected
-                            @endif>{{ $trainor->fullname }}</option>
+                        @foreach($courses as $course)
+                        <option value="{{ $course->trainor->id }}" @if(old('trainor_id')==$course->trainor->id) selected
+                            @endif>{{ $course->trainor->fullname }}</option>
                         @endforeach
                     </select>
 

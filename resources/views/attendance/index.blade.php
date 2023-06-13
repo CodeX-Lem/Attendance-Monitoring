@@ -18,7 +18,7 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
 </head>
 
-<body style="background-image: url('{{ asset('background.jpg') }}'); ">
+<body style="background-image: url('{{ asset('background.jpg') }}'); background-repeat:no-repeat; background-size:cover; ">
     <div class="container box-container d-flex flex-column h-100 justify-content-center">
         <div class="box align-items-center justify-content-center d-flex gap-5">
             <div class="container-fluid">

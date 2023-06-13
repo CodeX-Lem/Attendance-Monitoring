@@ -141,4 +141,51 @@ class StudentController extends Controller
             return $qr_code;
         }
     }
+
+    public function markAsCompleted($id)
+    {
+        try {
+            $student = StudentModel::findorfail($id);
+            $data = ['training_completed' => true];
+            $student->update($data);
+            Alert::success('Success', "Student's training has been marked as completed");
+        } catch (Exception $e) {
+            Alert::error('Error', "An error occured while marking the student's training as completed");
+        } finally {
+            return redirect()->back();
+        }
+    }
+
+    public function markAsOnGoing($id)
+    {
+        try {
+            $student = StudentModel::findorfail($id);
+            $data = ['training_completed' => false];
+            $student->update($data);
+            Alert::success('Success', "Student's training has been marked as not yet completed");
+        } catch (Exception $e) {
+            Alert::error('Error', "An error occured while marking the student's training as not yet completed");
+        } finally {
+            return redirect()->back();
+        }
+    }
+
+
+    public function markAsAccepted($id)
+    {
+        try {
+            $student = StudentModel::findorfail($id);
+            $accepted = $student->accepted;
+            $data = ['accepted' => $accepted ? false : true];
+            $student->update($data);
+
+            if (!$accepted) {
+                Alert::success('Success', "Student has been accepted");
+            }
+        } catch (Exception $e) {
+            Alert::error('Error', "An error occured");
+        } finally {
+            return redirect()->back();
+        }
+    }
 }

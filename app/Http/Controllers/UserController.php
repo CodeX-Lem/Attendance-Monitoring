@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Users\ChangeAdminProfileRequest;
 use App\Http\Requests\Users\ChangePassRequest;
 use App\Http\Requests\Users\StoreUserRequest;
+use App\Models\CourseModel;
 use App\Models\UserModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -61,7 +63,9 @@ class UserController extends Controller
         $previous = URL::previous();
         $current = URL::current();
         $previousUrl = $previous == $current ? route('admin.users.index') : $previous;
-        return view('admin.users.create', ['previousUrl' => $previousUrl]);
+
+        $courses =  CourseModel::with('trainor')->get();
+        return view('admin.users.create', ['previousUrl' => $previousUrl, 'courses' => $courses]);
     }
 
     public function store(StoreUserRequest $request)
@@ -132,55 +136,43 @@ class UserController extends Controller
         $current = URL::current();
         $previousUrl = $previous == $current ? route('admin.users.index') : $previous;
 
-        $adminUsername = env('ADMIN_USERNAME');
-        $adminPassword = env('ADMIN_PASSWORD');
+        $adminUsername = Config::get('adminCredentials.username');
+        $adminPassword = Config::get('adminCredentials.password');
         return view('admin.users.change-admin-profile', ['previousUrl' => $previousUrl, 'adminUsername' => $adminUsername, 'adminPassword' => $adminPassword]);
     }
 
     public function changeAdminProfile(ChangeAdminProfileRequest $request)
     {
         try {
-            $adminUsername = $request->input('username');
-            $adminPassword = $request->input('password');
-
-            // Update the values in the configuration
-            config(['app.admin_username' => $adminUsername]);
-            config(['app.admin_password' => $adminPassword]);
-
-            // Persist the changes in the .env file
-            $this->updateEnvFile('ADMIN_USERNAME', $adminUsername);
-            $this->updateEnvFile('ADMIN_PASSWORD', $adminPassword);
-
-            // Clear the config cache to reflect the changes
-            Artisan::call('config:clear');
+            $validatedData = $request->validated();
+            $newUsername = $validatedData['username'];
+            $newPassword = $validatedData['password'];
+            Config::set('adminCredentials.username', $newUsername);
+            Config::set('adminCredentials.password', $newPassword);
+            $this->saveConfigToFile('adminCredentials');
 
             Alert::success('Success', 'Admin credentials has been changed');
         } catch (Exception $e) {
             Alert::error('Error', 'An error occured while changing admin credentials');
         } finally {
+            Artisan::call('optimize');
             return redirect()->back();
         }
     }
 
-    private function updateEnvFile($key, $value)
+    private function saveConfigToFile($fileName)
     {
-        $envFile = base_path('.env');
-
-        if (file_exists($envFile)) {
-            file_put_contents($envFile, str_replace(
-                $key . '=' . env($key),
-                $key . '=' . $value,
-                file_get_contents($envFile)
-            ));
-        }
+        $configFile = base_path("config/{$fileName}.php");
+        $configData = '<?php return ' . var_export(config($fileName), true) . ';';
+        file_put_contents($configFile, $configData);
     }
 
     public function login(Request $request)
     {
         $username = $request->input('username');
         $password = $request->input('password');
-        $adminUsername = env('ADMIN_USERNAME', 'admin');
-        $adminPassword = env('ADMIN_PASSWORD', '12345678');
+        $adminUsername = Config::get('adminCredentials.username');
+        $adminPassword = Config::get('adminCredentials.password');
         if ($username == $adminUsername && $password == $adminPassword) {
             Session::put('isAdmin', true);
             return redirect()->route('admin.dashboard');
@@ -190,7 +182,8 @@ class UserController extends Controller
 
         if ($user && Hash::check($password, $user->password)) {
             Session::put('isAdmin', false);
-            return 'User is regular';
+            Session::put('trainor_id', $user->id);
+            return redirect()->route('trainor.students.index');
         }
 
         return redirect()->back()->with('message', 'Invalid username or password');

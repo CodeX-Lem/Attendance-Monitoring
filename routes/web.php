@@ -6,11 +6,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TrainorController;
+use App\Http\Controllers\TrainorStudents;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
-use App\Models\UserModel;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,6 +36,10 @@ Route::get('/', function () {
 Route::post('/', [UserController::class, 'login'])->name('login');
 Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
+Route::prefix(('trainor'))->middleware('isTrainor')->group(function () {
+    Route::get('/students', [TrainorStudents::class, 'index'])->name('trainor.students.index');
+});
+
 Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::get('/courses', [CourseController::class, 'index'])->name('admin.courses.index');
     Route::get('/courses/create', [CourseController::class, 'create'])->name('admin.courses.create');
@@ -56,6 +59,9 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::get('/students/create', [StudentController::class, 'create'])->name('admin.students.create');
     Route::post('/students/create', [StudentController::class, 'store'])->name('admin.students.store');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('admin.students.destroy');
+    Route::put('/students/mark-as-completed/{id}', [StudentController::class, 'markAsCompleted'])->name('admin.students.completed');
+    Route::put('/students/mark-as-ongoing/{id}', [StudentController::class, 'markAsOnGoing'])->name('admin.students.ongoing');
+    Route::put('/students/mark-as-accepted/{id}', [StudentController::class, 'markAsAccepted'])->name('admin.students.accepted');
 
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
