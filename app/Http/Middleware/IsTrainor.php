@@ -23,6 +23,9 @@ class IsTrainor
         }
 
         if (Session::get('isAdmin') == false) {
+            $trainorId = Session::get('trainor_id');
+            $trainor = UserModel::where('trainor_id', '=', $trainorId)->first();
+            View::share(['currentUser' => $trainor]);
             return $next($request);
         } else {
             Session::forget('isAdmin');

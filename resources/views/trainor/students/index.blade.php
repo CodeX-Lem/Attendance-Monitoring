@@ -1,10 +1,11 @@
-@extends('admin.layouts.layout')
+@extends('trainor.layouts.layout')
 @section('title','Students')
 @section('content')
 <div class="p-0 p-sm-4">
     <div class="border bg-white p-0 p-sm-3">
         <div class="container-fluid">
-            <x-search searchRoute="" addRoute="" searchMessage='Search any student here'></x-search>
+            <x-search searchRoute="{{ route('trainor.students.index') }}" addRoute=""
+                searchMessage='Search any student here'></x-search>
 
             <div class="table-responsive mt-3">
                 <table class="table table-bordered table-striped align-middle" style="font-size: 14px;">
@@ -44,39 +45,47 @@
                                 @if($student->training_completed)
                                 <div class="d-flex align-items-center gap-2">
                                     <span>Completed</span>
-                                    <form action="{{ route('admin.students.ongoing', ['id' => $student->id]) }}" method="POST">
+                                    <form action="{{ route('trainor.students.ongoing', ['id' => $student->id]) }}"
+                                        method="POST">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit" class="badge text-bg-danger border-0">Mark as not yet completed</button>
+                                        <button type="submit" class="badge text-bg-danger border-0">Mark as not yet
+                                            completed</button>
                                     </form>
-                               </div>
+                                </div>
                                 @else
-                               <div class="d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center gap-2">
                                     <span>Not Yet Completed</span>
-                                    <form action="{{ route('admin.students.completed', ['id' => $student->id]) }}" method="POST">
+                                    <form action="{{ route('trainor.students.completed', ['id' => $student->id]) }}"
+                                        method="POST">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit" class="badge text-bg-primary border-0">Mark as completed</button>
+                                        <button type="submit" class="badge text-bg-primary border-0">Mark as
+                                            completed</button>
                                     </form>
-                               </div>
+                                </div>
                                 @endif
                             </td>
                             <td>
                                 @if($student->accepted == 0)
                                 <div class="d-flex align-items-center gap-2">
-                                    <form action="{{ route('admin.students.accepted', ['id' => $student->id]) }}" method="POST">
+                                    <form action="{{ route('trainor.students.accepted', ['id' => $student->id]) }}"
+                                        method="POST">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit"  class="badge text-bg-success border-0">Accept</button>
+                                        <button type="submit" class="badge text-bg-success border-0">Accept</button>
                                     </form>
-                                    <a href="{{ route('admin.students.destroy', ['id' => $student->id]) }}" class="mt-1 badge text-bg-danger text-decoration-none" data-confirm-delete="true">Reject</a>
+                                    <a href="{{ route('trainor.students.destroy', ['id' => $student->id]) }}"
+                                        class="mt-1 badge text-bg-danger text-decoration-none"
+                                        data-confirm-delete="true">Reject</a>
                                 </div>
                                 @elseif($student->accepted == 1)
                                 <div class="d-flex align-items-center gap-2">
-                                    <form action="{{ route('admin.students.accepted', ['id' => $student->id]) }}" method="POST">
+                                    <form action="{{ route('trainor.students.accepted', ['id' => $student->id]) }}"
+                                        method="POST">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit"  class="badge text-bg-success border-0">Accepted</button>
+                                        <button type="submit" class="badge text-bg-success border-0">Accepted</button>
                                     </form>
                                 </div>
                                 @endif
@@ -84,12 +93,14 @@
                             <td>
                                 <div class="d-flex justify-content-end">
                                     <div class="dropdown">
-                                        <button class="dropdown-toggle border-1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="dropdown-toggle border-1" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
                                             Action
                                         </button>
                                         <ul class="dropdown-menu text-small shadow position-fixed rounded-0">
                                             <li>
-                                                <a href="{{ route('admin.students.qrcode', ['id' => $student->id]) }}" class="dropdown-item">
+                                                <a href="{{ route('trainor.students.qrcode', ['id' => $student->id]) }}"
+                                                    class="dropdown-item">
                                                     Download Qr Code
                                                 </a>
                                             </li>
@@ -106,7 +117,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <x-pagination :pageData="$students" route=""></x-pagination>
+                <x-pagination :pageData="$students" route="{{ route('trainor.students.index') }}"></x-pagination>
             </div>
         </div>
     </div>

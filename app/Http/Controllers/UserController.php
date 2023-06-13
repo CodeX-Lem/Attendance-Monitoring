@@ -182,7 +182,7 @@ class UserController extends Controller
 
         if ($user && Hash::check($password, $user->password)) {
             Session::put('isAdmin', false);
-            Session::put('trainor_id', $user->id);
+            Session::put('trainor_id', $user->trainor_id);
             return redirect()->route('trainor.students.index');
         }
 
@@ -193,7 +193,11 @@ class UserController extends Controller
     {
         if (Session::has('isAdmin')) {
             Session::pull('isAdmin');
-            return redirect('/');
         }
+        if (Session::has('trainor_id')) {
+            Session::pull('trainor_id');
+        }
+
+        return redirect('/');
     }
 }

@@ -38,6 +38,11 @@ Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::prefix(('trainor'))->middleware('isTrainor')->group(function () {
     Route::get('/students', [TrainorStudents::class, 'index'])->name('trainor.students.index');
+    Route::delete('/students/{id}', [TrainorStudents::class, 'destroy'])->name('trainor.students.destroy');
+    Route::put('/students/mark-as-completed/{id}', [TrainorStudents::class, 'markAsCompleted'])->name('trainor.students.completed');
+    Route::put('/students/mark-as-ongoing/{id}', [TrainorStudents::class, 'markAsOnGoing'])->name('trainor.students.ongoing');
+    Route::put('/students/mark-as-accepted/{id}', [TrainorStudents::class, 'markAsAccepted'])->name('trainor.students.accepted');
+    Route::get('/students/qrcode{id}', [QrCodeController::class, 'download'])->name('trainor.students.qrcode');
 });
 
 Route::prefix('admin')->middleware('isAdmin')->group(function () {
