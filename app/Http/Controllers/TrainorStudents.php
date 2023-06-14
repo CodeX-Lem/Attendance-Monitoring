@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Students\StoreStudentRequest;
 use App\Models\StudentModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class TrainorStudents extends Controller
@@ -50,7 +52,6 @@ class TrainorStudents extends Controller
 
         return view('trainor.students.index', ['students' => $students]);
     }
-
     public function destroy($id)
     {
         try {
@@ -66,22 +67,6 @@ class TrainorStudents extends Controller
         } catch (Exception $e) {
             Alert::error('Error', 'An error occured while removing the student');
             return redirect()->back();
-        }
-    }
-
-    protected function generateQrCode()
-    {
-        $currentYear = date('Y');
-        $latestStudent = StudentModel::whereYear('created_at', $currentYear)
-            ->orderByDesc('created_at')->first();
-
-        if (!$latestStudent) {
-            $qr_code = $currentYear  . "001";
-            return $qr_code;
-        } else {
-            $qr_code = $latestStudent->qr_code;
-            $qr_code = (int)$qr_code + 1;
-            return $qr_code;
         }
     }
 

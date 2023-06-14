@@ -17,7 +17,7 @@
             </div>
         </form>
     </div>
-    <div class="col-auto">
+    <div class="col-auto {{ session('isAdmin') ? 'd-block' : 'd-none'}}">
         <a href="{{ $addRoute }}"
             class="btn btn-sm btn-primary btn-add rounded-0 d-inline-flex align-items-center gap-1">
             <svg xmlns=" http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

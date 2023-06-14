@@ -183,7 +183,7 @@ class UserController extends Controller
         if ($user && Hash::check($password, $user->password)) {
             Session::put('isAdmin', false);
             Session::put('trainor_id', $user->trainor_id);
-            return redirect()->route('trainor.students.index');
+            return redirect()->route('trainor.dashboard');
         }
 
         return redirect()->back()->with('message', 'Invalid username or password');

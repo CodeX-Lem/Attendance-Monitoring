@@ -5,7 +5,9 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TrainorAttendance;
 use App\Http\Controllers\TrainorController;
+use App\Http\Controllers\TrainorDashboard;
 use App\Http\Controllers\TrainorStudents;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +29,7 @@ Route::get('/', function () {
         if (Session::get('isAdmin') == true) {
             return redirect()->route('admin.dashboard');
         } else {
+            return redirect()->route('trainor.dashboard');
         }
     }
 
@@ -43,6 +46,10 @@ Route::prefix(('trainor'))->middleware('isTrainor')->group(function () {
     Route::put('/students/mark-as-ongoing/{id}', [TrainorStudents::class, 'markAsOnGoing'])->name('trainor.students.ongoing');
     Route::put('/students/mark-as-accepted/{id}', [TrainorStudents::class, 'markAsAccepted'])->name('trainor.students.accepted');
     Route::get('/students/qrcode{id}', [QrCodeController::class, 'download'])->name('trainor.students.qrcode');
+
+    Route::get('/reports', [TrainorAttendance::class, 'index'])->name('trainor.reports.index');
+
+    Route::get('/dashboard', [TrainorDashboard::class, 'index'])->name('trainor.dashboard');
 });
 
 Route::prefix('admin')->middleware('isAdmin')->group(function () {
@@ -79,7 +86,7 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
 
     Route::get('/students/qrcode{id}', [QrCodeController::class, 'download'])->name('admin.students.qrcode');
 
-    Route::get('/attendance', [AttendanceController::class, 'index']);
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('admin.attendance');
     Route::post('/attendance', [AttendanceController::class, 'scan'])->name('attendance.scan');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
