@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminReports;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
@@ -90,4 +91,6 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::post('/attendance', [AttendanceController::class, 'scan'])->name('attendance.scan');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    Route::get('/reports', [AdminReports::class, 'index'])->name('admin.reports.index');
 });

@@ -21,7 +21,9 @@ class TrainorDashboard extends Controller
 
         $totalAttendanceToday = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
             $query->where('trainor_id', '=', $trainorId);
-        })->count();
+        })
+            ->whereDate('date', $today)
+            ->count();
 
         $lateCount = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
             $query->where('trainor_id', '=', $trainorId);

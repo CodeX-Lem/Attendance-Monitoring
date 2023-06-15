@@ -1,11 +1,11 @@
-@extends('trainor.layouts.layout')
+@extends('admin.layouts.layout')
 @section('title','Reports')
 @section('content')
 <div class="p-0 p-sm-4">
     <div class="border bg-white p-0 p-sm-3">
         <div class="container-fluid">
             <div class="row gx-1 gy-2 gy-md-0 mt-3">
-                <form action="{{ route('trainor.reports.index') }}" method="GET" class="d-flex align-items-center justify-content-end">
+                <form action="{{ route('admin.reports.index') }}" method="GET" class="d-flex align-items-center justify-content-end">
                     <div class="col-md-6">
                         <input type="hidden" class="form-control shadow-none rounded-0" name="entries"
                             value="{{ request('entries', 5) }}" autocomplete="off">
@@ -46,6 +46,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Date</th>
                             <th scope="col">Fullname</th>
+                            <th scope="col">Course</th>
                             <th scope="col">Time-in AM</th>
                             <th scope="col">Status AM</th>
                             <th scope="col">Time-out AM</th>
@@ -69,6 +70,7 @@
                                 <td>{{$counter++}}</td>
                                 <td>{{ date('F d, Y', strtotime($row->date)); }}</td>
                                 <td>{{$row->student->fullname}}</td>
+                                <td>{{ $row->student->course->course }}</td>
                                 <td>{{$row->time_in_am}}</td>
                                 <td>{{$row->status_am}}</td>
                                 <td>{{$row->time_out_am}}</td>
@@ -84,7 +86,7 @@
                     <div class="col-auto">
                         <div class="d-flex align-items-center gap-2">
                             <span>Show</span>
-                            <form action="{{ route('trainor.reports.index') }}">
+                            <form action="{{ route('admin.reports.index') }}">
                                 <select name="entries" class="form-select form-select-sm shadow-none rounded-0"
                                     onchange="this.form.submit()">
                                     <option value="5" {{ $attendance->perPage() == 5 ? 'selected' : '' }}>5</option>
