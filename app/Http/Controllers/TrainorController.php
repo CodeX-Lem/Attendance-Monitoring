@@ -20,7 +20,7 @@ class TrainorController extends Controller
 
         $search = $request->input('search', '');
         $entries = $request->input('entries', 5);
-        $trainors = TrainorModel::where('fullname', 'like', '%' . $search . '%')->paginate($entries);
+        $trainors = TrainorModel::where('fullname', $this->like, '%' . $search . '%')->paginate($entries);
 
         $currentPage = $trainors->currentPage();
         $lastPage = $trainors->lastPage();

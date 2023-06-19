@@ -96,7 +96,7 @@
                 </div>
             </div>
             <div class="card-footer border-0 p-0">
-                <a href="" class="text-decoration-none d-block text-center py-1 card-dashboard__link">More
+                <a href="{{ route('admin.reports.index') }}" class="text-decoration-none d-block text-center py-1 card-dashboard__link">More
                     Info</a>
             </div>
         </div>

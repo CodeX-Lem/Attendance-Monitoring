@@ -24,7 +24,7 @@
 
                     <div class="col-md-6">
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control shadow-none rounded-0" placeholder="Search any student"
+                            <input type="text" class="form-control shadow-none rounded-0" placeholder="Search any student or course"
                                 name="search" autocomplete="off" autofocus>
                             <button type="submit" class="btn btn-success d-inline-flex align-items-center gap-2 rounded-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -71,12 +71,12 @@
                                 <td>{{ date('F d, Y', strtotime($row->date)); }}</td>
                                 <td>{{$row->student->fullname}}</td>
                                 <td>{{ $row->student->course->course }}</td>
-                                <td>{{$row->time_in_am}}</td>
+                                <td>{{ $row->time_in_am ? date('h:i A', strtotime($row->time_in_am)) : '' }}</td>
                                 <td class="fw-bold {{ strtolower($row->status_am) == 'late' ? 'text-danger' : 'text-success'  }}">{{$row->status_am}}</td>
-                                <td>{{$row->time_out_am}}</td>
-                                <td>{{$row->time_in_pm}}</td>
+                                <td>{{ $row->time_out_am ? date('h:i A', strtotime($row->time_out_am)) : '' }}</td>
+                                <td>{{ $row->time_in_pm ? date('h:i A', strtotime($row->time_in_pm)) : '' }}</td>
                                 <td class="fw-bold {{ strtolower($row->status_pm) == 'late' ? 'text-danger' : 'text-success'  }}">{{$row->status_pm}}</td>
-                                <td>{{$row->time_out_pm}}</td>
+                                <td>{{ $row->time_out_pm ? date('h:i A', strtotime($row->time_out_pm)) : '' }}</td>
                             </tr>
                         @endforeach
                     </tbody>

@@ -94,7 +94,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="" class="dropdown-item">
+                                                <a href="{{ route('admin.students.view-student', ['id' => $student->id]) }}" class="dropdown-item">
                                                     View Info
                                                 </a>
                                             </li>

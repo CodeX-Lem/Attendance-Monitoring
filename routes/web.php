@@ -47,6 +47,7 @@ Route::prefix(('trainor'))->middleware('isTrainor')->group(function () {
     Route::put('/students/mark-as-ongoing/{id}', [TrainorStudents::class, 'markAsOnGoing'])->name('trainor.students.ongoing');
     Route::put('/students/mark-as-accepted/{id}', [TrainorStudents::class, 'markAsAccepted'])->name('trainor.students.accepted');
     Route::get('/students/qrcode{id}', [QrCodeController::class, 'download'])->name('trainor.students.qrcode');
+    Route::get('/students/view-student/{id}', [TrainorStudents::class, 'viewStudent'])->name('trainor.students.view-student');
 
     Route::get('/reports', [TrainorAttendance::class, 'index'])->name('trainor.reports.index');
 
@@ -75,6 +76,7 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::put('/students/mark-as-completed/{id}', [StudentController::class, 'markAsCompleted'])->name('admin.students.completed');
     Route::put('/students/mark-as-ongoing/{id}', [StudentController::class, 'markAsOnGoing'])->name('admin.students.ongoing');
     Route::put('/students/mark-as-accepted/{id}', [StudentController::class, 'markAsAccepted'])->name('admin.students.accepted');
+    Route::get('/students/view-student/{id}', [StudentController::class, 'viewStudent'])->name('admin.students.view-student');
 
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');

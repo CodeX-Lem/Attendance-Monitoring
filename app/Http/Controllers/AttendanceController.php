@@ -34,7 +34,7 @@ class AttendanceController extends Controller
                     ->first();
 
                 // TIME OUT THE STUDENTS IN AM IF ALREADY TIMED IN AND CURRENT TIME IS BETWEEN 12:00 PM - 01:30 PM
-                if ($attendance->time_out_am === null && $currentTime >= $timeOutAm && $currentTime < $timeInPm) {
+                if ($attendance->time_in_am != null &&  $attendance->time_out_am == null && $currentTime >= $timeOutAm && $currentTime < $timeInPm) {
                     $attendance->time_out_am =  Carbon::now()->toTimeString();
                     $attendance->save();
                     return view('attendance.index', ['student' => $student, 'status' => 'You are now timed out']);
@@ -86,11 +86,11 @@ class AttendanceController extends Controller
                         'student_id' => $student->id,
                         'date' => Carbon::today()->toDateString(),
                         'time_in_pm' => Carbon::now()->toTimeString(),
-                        'status_pm' => $currentTime > $timeInAm ? 'Late' : 'On-Time',
+                        'status_pm' => $currentTime > $timeInPm ? 'Late' : 'On-Time',
                     ];
 
                     AttendanceModel::create($data);
-                    return view('attendance.index', ['student' => $student, 'status' =>  $currentTime > $timeInAm ? 'You timed in Late' : 'You timed in On-Time',]);
+                    return view('attendance.index', ['student' => $student, 'status' =>  $currentTime > $timeInPm ? 'You timed in Late' : 'You timed in On-Time',]);
                 }
             }
         }

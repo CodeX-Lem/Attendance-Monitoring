@@ -19,9 +19,9 @@ class AdminReports extends Controller
 
         $attendance = AttendanceModel::whereBetween('date', [$dateFrom, $dateTo])
             ->whereHas('student', function ($query) use ($search) {
-                $query->where('fullname', 'like', '%' . $search . '%')
+                $query->where('fullname', $this->like, '%' . $search . '%')
                     ->orWhereHas('course', function ($query) use ($search) {
-                        $query->where('course', 'like', '%' . $search . '%');
+                        $query->where('course', $this->like, '%' . $search . '%');
                     });
             })
             ->with(['student', 'student.course'])

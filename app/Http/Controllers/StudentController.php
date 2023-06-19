@@ -20,11 +20,11 @@ class StudentController extends Controller
 
         $search = $request->input('search', '');
         $entries = $request->input('entries', 5);
-
         $students = StudentModel::with(['course' => function ($query) {
             $query->select('id', 'course');
         }])
-            ->where('fullname', 'like', '%' . $search . '%')
+            ->where('fullname', $this->like, "%$search%")
+            ->orderBy('id')
             ->paginate($entries);
 
         $currentPage = $students->currentPage();
@@ -48,6 +48,16 @@ class StudentController extends Controller
         }
 
         return view('admin.students.index', ['students' => $students]);
+    }
+
+    public function viewStudent($id)
+    {
+        $previous = URL::previous();
+        $current = URL::current();
+        $previousUrl = $previous == $current ? route('admin.students.index') : $previous;
+        $student = StudentModel::find($id);
+
+        return view('admin.students.view-student', ['previousUrl' => $previousUrl, 'student' => $student]);
     }
 
     public function create()

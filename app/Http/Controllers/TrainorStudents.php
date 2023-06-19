@@ -27,7 +27,8 @@ class TrainorStudents extends Controller
         $students = StudentModel::whereHas('course', function ($query) use ($trainorId) {
             $query->select('id', 'course', 'trainor_id')->where('trainor_id', '=', $trainorId);
         })
-            ->where('fullname', 'like', '%' . $search . '%')
+            ->where('fullname', $this->like, '%' . $search . '%')
+            ->orderBy('id')
             ->paginate($entries);
 
         $currentPage = $students->currentPage();
@@ -52,6 +53,17 @@ class TrainorStudents extends Controller
 
         return view('trainor.students.index', ['students' => $students]);
     }
+
+    public function viewStudent($id)
+    {
+        $previous = URL::previous();
+        $current = URL::current();
+        $previousUrl = $previous == $current ? route('trainor.students.index') : $previous;
+        $student = StudentModel::find($id);
+
+        return view('trainor.students.view-student', ['previousUrl' => $previousUrl, 'student' => $student]);
+    }
+
     public function destroy($id)
     {
         try {

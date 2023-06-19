@@ -153,6 +153,9 @@
                 <div class="col-md-8 mb-3">
                     <label class="form-label">Profile Image</label>
                     <input class="form-control shadow-none rounded-0" type="file" name="image" accept="image/*">
+                    @error('image')
+                    <div class="form-text text-danger mt-2">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 

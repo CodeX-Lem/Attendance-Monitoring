@@ -23,7 +23,7 @@ class TrainorAttendance extends Controller
         })
             ->whereBetween('date', [$dateFrom, $dateTo])
             ->whereHas('student', function ($query) use ($search) {
-                $query->where('fullname', 'like', '%' . $search . '%');
+                $query->where('fullname', $this->like, '%' . $search . '%');
             })
             ->with('student:id,fullname')
             ->paginate($entries);

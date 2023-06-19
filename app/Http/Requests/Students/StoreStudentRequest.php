@@ -28,6 +28,7 @@ class StoreStudentRequest extends FormRequest
             'last_name' => ['required'],
             'dob' => ['required'],
             'scholarship_type' => ['required'],
+            'image' => ['max:2048'],
         ];
     }
 
@@ -36,6 +37,13 @@ class StoreStudentRequest extends FormRequest
         return [
             'course_id' => 'training program',
             'dob' => 'date of birth',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'image.max' => 'The image must not exceed 2 MB in size.',
         ];
     }
 }

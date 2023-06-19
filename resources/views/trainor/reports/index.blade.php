@@ -69,12 +69,12 @@
                             <td>{{$counter++}}</td>
                             <td>{{ date('F d, Y', strtotime($row->date)); }}</td>
                             <td>{{$row->student->fullname}}</td>
-                            <td>{{$row->time_in_am}}</td>
+                            <td>{{ $row->time_in_am ? date('h:i A', strtotime($row->time_in_am)) : '' }}</td>
                             <td class="fw-bold {{ strtolower($row->status_am) == 'late' ? 'text-danger' : 'text-success'  }}">{{$row->status_am}}</td>
-                            <td>{{$row->time_out_am}}</td>
-                            <td>{{$row->time_in_pm}}</td>
+                            <td>{{ $row->time_out_am ? date('h:i A', strtotime($row->time_out_am)) : '' }}</td>
+                            <td>{{ $row->time_in_pm ? date('h:i A', strtotime($row->time_in_pm)) : '' }}</td>
                             <td class="fw-bold {{ strtolower($row->status_pm) == 'late' ? 'text-danger' : 'text-success'  }}">{{$row->status_pm}}</td>
-                            <td>{{$row->time_out_pm}}</td>
+                            <td>{{ $row->time_out_pm ? date('h:i A', strtotime($row->time_out_pm)) : '' }}</td>
                         </tr>
                         @endforeach
                     </tbody>

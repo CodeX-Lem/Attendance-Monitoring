@@ -21,9 +21,9 @@ class CourseController extends Controller
       $query->select('id', 'fullname');
     }])
       ->where(function ($query) use ($search) {
-        $query->where('course', 'like', '%' . $search . '%')
+        $query->where('course', $this->like, '%' . $search . '%')
           ->orWhereHas('trainor', function ($query) use ($search) {
-            $query->where('fullname', 'like', '%' . $search . '%');
+            $query->where('fullname', $this->like, '%' . $search . '%');
           });
       })
       ->paginate($entries);

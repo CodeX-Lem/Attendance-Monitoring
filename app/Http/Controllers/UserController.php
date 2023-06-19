@@ -27,9 +27,9 @@ class UserController extends Controller
             $query->select('id', 'fullname');
         }])
             ->where(function ($query) use ($search) {
-                $query->where('username', 'like', '%' . $search . '%')
+                $query->where('username', $this->like, '%' . $search . '%')
                     ->orWhereHas('trainor', function ($query) use ($search) {
-                        $query->where('fullname', 'like', '%' . $search . '%');
+                        $query->where('fullname', $this->like, '%' . $search . '%');
                     });
             })
             ->paginate($entries);

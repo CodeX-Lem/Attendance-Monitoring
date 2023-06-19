@@ -9,4 +9,11 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
+    protected $like = 'like';
+
+    public function __construct()
+    {
+        $this->like = env('DB_CONNECTION') == 'pgsql' ? 'ilike' : 'like';
+    }
 }
