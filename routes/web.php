@@ -95,4 +95,5 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     Route::get('/reports', [AdminReports::class, 'index'])->name('admin.reports.index');
+    Route::get('/reports/download', [AdminReports::class, 'exportPdf'])->name('admin.reports.download');
 });

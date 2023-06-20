@@ -137,6 +137,13 @@
                         </ul>
                     </div>
                 </div>
+
+                <form action="{{ route('admin.reports.download') }}" method="GET">
+                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-link">Download PDF</button>
+                </form>
             </div>
         </div>
     </div>

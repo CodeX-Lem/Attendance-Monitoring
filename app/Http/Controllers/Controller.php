@@ -10,10 +10,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    protected $like = 'like';
+    protected $like = '';
 
     public function __construct()
     {
-        $this->like = env('DB_CONNECTION') == 'pgsql' ? 'ilike' : 'like';
+        $databaseDriver = config('database.connections.' . config('database.default') . '.driver');
+        $this->like = $databaseDriver == 'pgsql' ? 'ilike' : 'like';
     }
 }
