@@ -10,8 +10,28 @@
             </ol>
         </nav>
         <hr>
-   
-      <h2 class="text-center mb-5">Student Profile</h2>
+
+        <h2 class="text-center">Student Profile</h2>
+        <div class="d-flex align-items-center justify-content-end mb-5 ">
+            @if($student->accepted == 0)
+            <div class="d-flex align-items-center gap-2">
+                <form action="{{ route('admin.students.accepted', ['id' => $student->id]) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit"  class="fs-4 badge text-bg-success border-0">Accept</button>
+                </form>
+                <a href="{{ route('admin.students.reject', ['id' => $student->id]) }}" class="fs-4  badge text-bg-danger text-decoration-none" data-confirm-delete="true">Reject</a>
+            </div>
+            @elseif($student->accepted == 1)
+            <div class="d-flex align-items-center gap-2">
+                <form action="{{ route('admin.students.accepted', ['id' => $student->id]) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit"  class="fs-4 badge text-bg-success border-0">Accepted</button>
+                </form>
+            </div>
+            @endif
+        </div>
       <div class="row">
         <div class="col-xl-3">
             <div class="border mb-3" style="width: 200px; height: 200px">
@@ -96,19 +116,22 @@
                 <span class="d-inline-block" style="width: 150px">Admission Status: </span> <span class="fw-bold d-block d-md-inline">{{ $student->accepted ? 'Accepted' : 'Pending' }}</span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3 d-flex align-items-center gap-2">
                   <a href="{{ old('previous_url', $previousUrl) }}" class="btn btn-primary btn-sm rounded-0 shadow-none">
                 Go Back
-            </a>
+                 </a>
             </div>
         </div>
 
         <div class="col-xl-3 order-2 order-xl-3">
-           <div class="mb-3" style="width: 200px; height: 200px">
+           <div class="mb-3 d-flex flex-column align-items-center gap-2" style="width: 200px; height: 200px">
             {!!
             QrCode::size(200)->generate($student->qr_code)
             !!}
+
+           <span class="fs-5 fw-bold">{{ $student->qr_code }}</span>
            </div>
+           
         </div>
       </div>
     </div>

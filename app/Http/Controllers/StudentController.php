@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Students\StoreStudentRequest;
+use App\Http\Requests\Students\UpdateStudentRequest;
 use App\Models\StudentModel;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,10 +21,17 @@ class StudentController extends Controller
 
         $search = $request->input('search', '');
         $entries = $request->input('entries', 5);
-        $students = StudentModel::with(['course' => function ($query) {
-            $query->select('id', 'course');
-        }])
+        $training_completed = $request->input('training_completed', 0);
+        $course_id = $request->input('course_id', '');
+        $students = StudentModel::whereHas('course', function ($query) use ($course_id) {
+            if ($course_id == '') {
+                $query->select('id', 'course');
+            } else {
+                $query->select('id', 'course')->where('id', '=', $course_id);
+            }
+        })
             ->where('fullname', $this->like, "%$search%")
+            ->where('training_completed', '=', $training_completed)
             ->orderBy('id')
             ->paginate($entries);
 
@@ -35,6 +43,8 @@ class StudentController extends Controller
                 'page' => $lastPage,
                 'entries' => $entries,
                 'search' => $search,
+                'training_completed' => $training_completed,
+                'selectedCourse' => $course_id,
             ]);
 
 
@@ -47,7 +57,7 @@ class StudentController extends Controller
             return $redirect;
         }
 
-        return view('admin.students.index', ['students' => $students]);
+        return view('admin.students.index', ['students' => $students, 'training_completed' => $training_completed, 'selectedCourse' => $course_id]);
     }
 
     public function viewStudent($id)
@@ -56,6 +66,10 @@ class StudentController extends Controller
         $current = URL::current();
         $previousUrl = $previous == $current ? route('admin.students.index') : $previous;
         $student = StudentModel::find($id);
+
+        $title = 'Reject Student?';
+        $text = "Student's data will be deleted after confirming";
+        confirmDelete($title, $text);
 
         return view('admin.students.view-student', ['previousUrl' => $previousUrl, 'student' => $student]);
     }
@@ -88,15 +102,15 @@ class StudentController extends Controller
                 'last_name' => $validatedData['last_name'],
                 'fullname' => $validatedData['first_name'] . ' ' . $validatedData['middle_name'] . ' ' . $validatedData['last_name'],
                 'dob' => date_create($validatedData['dob']),
-                'gender' => $request->input('gender'),
-                'civil_status' => $request->input('civil_status'),
-                'nationality' => $request->input('nationality'),
+                'gender' => $validatedData['gender'],
+                'civil_status' => $validatedData['civil_status'],
+                'nationality' => $validatedData['nationality'],
                 'street' => $request->input('street'),
-                'barangay' => $request->input('barangay'),
-                'city' => $request->input('city'),
-                'district' => $request->input('district'),
-                'province' => $request->input('province'),
-                'scholarship_type' => $request->input('scholarship_type'),
+                'barangay' => $validatedData['barangay'],
+                'city' => $validatedData['city'],
+                'district' => $validatedData['district'],
+                'province' => $validatedData['province'],
+                'scholarship_type' => $validatedData['scholarship_type'],
                 'highest_grade_completed' => $request->input('highest_grade_completed'),
                 'classification' => 'Unemployed',
                 'training_status' => 'Scholar',
@@ -136,11 +150,29 @@ class StudentController extends Controller
         }
     }
 
+    public function reject($id)
+    {
+        try {
+            $student = StudentModel::findorfail($id);
+            $student->delete();
+
+            if (Storage::disk('public')->exists('images/' .  $student->image)) {
+                Storage::disk('public')->delete('images/' . $student->image);
+            }
+
+            Alert::success('Success', 'Student Has Been Removed');
+            return redirect()->route('admin.students.index');
+        } catch (Exception $e) {
+            Alert::error('Error', 'An error occured while removing the student');
+            return redirect()->route('admin.students.index');
+        }
+    }
+
     protected function generateQrCode()
     {
         $currentYear = date('Y');
         $latestStudent = StudentModel::whereYear('created_at', $currentYear)
-            ->orderByDesc('created_at')->first();
+            ->orderByDesc('id')->first();
 
         if (!$latestStudent) {
             $qr_code = $currentYear  . "001";
@@ -152,33 +184,33 @@ class StudentController extends Controller
         }
     }
 
-    public function markAsCompleted($id)
-    {
-        try {
-            $student = StudentModel::findorfail($id);
-            $data = ['training_completed' => true];
-            $student->update($data);
-            Alert::success('Success', "Student's training has been marked as completed");
-        } catch (Exception $e) {
-            Alert::error('Error', "An error occured while marking the student's training as completed");
-        } finally {
-            return redirect()->back();
-        }
-    }
+    // public function markAsCompleted($id)
+    // {
+    //     try {
+    //         $student = StudentModel::findorfail($id);
+    //         $data = ['training_completed' => true];
+    //         $student->update($data);
+    //         Alert::success('Success', "Student's training has been marked as completed");
+    //     } catch (Exception $e) {
+    //         Alert::error('Error', "An error occured while marking the student's training as completed");
+    //     } finally {
+    //         return redirect()->back();
+    //     }
+    // }
 
-    public function markAsOnGoing($id)
-    {
-        try {
-            $student = StudentModel::findorfail($id);
-            $data = ['training_completed' => false];
-            $student->update($data);
-            Alert::success('Success', "Student's training has been marked as not yet completed");
-        } catch (Exception $e) {
-            Alert::error('Error', "An error occured while marking the student's training as not yet completed");
-        } finally {
-            return redirect()->back();
-        }
-    }
+    // public function markAsOnGoing($id)
+    // {
+    //     try {
+    //         $student = StudentModel::findorfail($id);
+    //         $data = ['training_completed' => false];
+    //         $student->update($data);
+    //         Alert::success('Success', "Student's training has been marked as not yet completed");
+    //     } catch (Exception $e) {
+    //         Alert::error('Error', "An error occured while marking the student's training as not yet completed");
+    //     } finally {
+    //         return redirect()->back();
+    //     }
+    // }
 
 
     public function markAsAccepted($id)
@@ -196,6 +228,52 @@ class StudentController extends Controller
             Alert::error('Error', "An error occured");
         } finally {
             return redirect()->back();
+        }
+    }
+
+    public function show($id)
+    {
+        $previous = URL::previous();
+        $current = URL::current();
+        $previousUrl = $previous == $current ? route('admin.students.index') : $previous;
+        $student = StudentModel::find($id);
+
+        return view('admin.students.edit', ['student' => $student, 'previousUrl' => $previousUrl]);
+    }
+
+    public function update(UpdateStudentRequest $request, $id)
+    {
+        try {
+            $validatedData = $request->validated();
+            $student = StudentModel::find($id);
+
+            $data = [
+                'first_name' => $validatedData['first_name'],
+                'middle_name' => $validatedData['middle_name'],
+                'last_name' => $validatedData['last_name'],
+                'fullname' => $validatedData['first_name'] . ' ' . $validatedData['middle_name'] . ' ' . $validatedData['last_name'],
+                'dob' => date_create($validatedData['dob']),
+                'gender' => $validatedData['gender'],
+                'civil_status' => $validatedData['civil_status'],
+                'nationality' => $validatedData['nationality'],
+                'street' => $request->input('street'),
+                'barangay' => $validatedData['barangay'],
+                'city' => $validatedData['city'],
+                'district' => $validatedData['district'],
+                'province' => $validatedData['province'],
+                'scholarship_type' => $validatedData['scholarship_type'],
+                'highest_grade_completed' => $request->input('highest_grade_completed'),
+                'scholarship_type' => $validatedData['scholarship_type'],
+                'training_completed' => false,
+            ];
+            $student->update($data);
+
+            Alert::success('Success', 'Student has been updated');
+        } catch (Exception $e) {
+            dd($e);
+            Alert::error('Error', 'An error occured while updating the student');
+        } finally {
+            return redirect($request->input('previous_url'));
         }
     }
 }

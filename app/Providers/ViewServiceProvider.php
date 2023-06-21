@@ -24,6 +24,6 @@ class ViewServiceProvider extends ServiceProvider
     {
         //
         View::composer(['admin.courses.create', 'admin.courses.edit'], TrainorComposer::class);
-        View::composer(['admin.students.create'], CourseComposer::class);
+        View::composer(['admin.students.create', 'admin.students.index'], CourseComposer::class);
     }
 }

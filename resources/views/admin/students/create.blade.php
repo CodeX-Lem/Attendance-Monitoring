@@ -36,7 +36,7 @@
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">Gender</label>
+                    <label class="form-label">Gender <span class="text-danger">*</span></label>
                     <select class="form-select shadow-none rounded-0" name="gender">
                         <option value="" @if(old('gender')==='' ) selected @endif>--Select Gender--</option>
                         <option value="Male" @if(old('gender')==='Male' ) selected @endif>Male</option>
@@ -54,7 +54,7 @@
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">Civil Status</label>
+                    <label class="form-label">Civil Status <span class="text-danger">*</span></label>
                     <select class="form-select shadow-none rounded-0" name="civil_status">
                         <option value="" @if(old('civil_status')=='' ) selected @endif>--Select Civil Status--</option>
                         <option value="Single" @if(old('civil_status')=='Single' ) selected @endif>Single</option>
@@ -70,7 +70,7 @@
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">Nationality</label>
+                    <label class="form-label">Nationality <span class="text-danger">*</span></label>
                     <input type="text" class="form-control shadow-none rounded-0" name="nationality" autocomplete="off" value="{{ old('nationality') }}">
                     @error('nationality')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Barangay</label>
+                    <label class="form-label">Barangay <span class="text-danger">*</span></label>
                     <input type="text" class="form-control shadow-none rounded-0" name="barangay" autocomplete="off" value="{{ old('barangay') }}">
                     @error('barangay')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
@@ -93,7 +93,7 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">City/Municipality</label>
+                    <label class="form-label">City/Municipality <span class="text-danger">*</span></label>
                     <input type="text" class="form-control shadow-none rounded-0" name="city" autocomplete="off" value="{{ old('city') }}">
                     @error('city')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">District</label>
+                    <label class="form-label">District <span class="text-danger">*</span></label>
                     <input type="text" class="form-control shadow-none rounded-0" name="district" autocomplete="off" value="{{ old('district') }}">
                     @error('district')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
@@ -109,7 +109,7 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Province</label>
+                    <label class="form-label">Province <span class="text-danger">*</span></label>
                     <input type="text" class="form-control shadow-none rounded-0" name="province" autocomplete="off" value="{{ old('province') }}">
                     @error('province')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>

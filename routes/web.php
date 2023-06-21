@@ -73,10 +73,13 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::get('/students/create', [StudentController::class, 'create'])->name('admin.students.create');
     Route::post('/students/create', [StudentController::class, 'store'])->name('admin.students.store');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('admin.students.destroy');
-    Route::put('/students/mark-as-completed/{id}', [StudentController::class, 'markAsCompleted'])->name('admin.students.completed');
-    Route::put('/students/mark-as-ongoing/{id}', [StudentController::class, 'markAsOnGoing'])->name('admin.students.ongoing');
+    // Route::put('/students/mark-as-completed/{id}', [StudentController::class, 'markAsCompleted'])->name('admin.students.completed');
+    // Route::put('/students/mark-as-ongoing/{id}', [StudentController::class, 'markAsOnGoing'])->name('admin.students.ongoing');
     Route::put('/students/mark-as-accepted/{id}', [StudentController::class, 'markAsAccepted'])->name('admin.students.accepted');
     Route::get('/students/view-student/{id}', [StudentController::class, 'viewStudent'])->name('admin.students.view-student');
+    Route::get('/students/edit/{id}', [StudentController::class, 'show'])->name('admin.students.show');
+    Route::put('/students/edit/{id}', [StudentController::class, 'update'])->name('admin.students.update');
+    Route::delete('/students/reject/{id}', [StudentController::class, 'reject'])->name('admin.students.reject');
 
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');

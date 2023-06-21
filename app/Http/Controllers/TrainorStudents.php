@@ -21,13 +21,13 @@ class TrainorStudents extends Controller
 
         $search = $request->input('search', '');
         $entries = $request->input('entries', 5);
-
         $trainorId = Session::get('trainor_id');
-
+        $training_completed = $request->input('training_completed', 0);
         $students = StudentModel::whereHas('course', function ($query) use ($trainorId) {
             $query->select('id', 'course', 'trainor_id')->where('trainor_id', '=', $trainorId);
         })
             ->where('fullname', $this->like, '%' . $search . '%')
+            ->where('training_completed', '=', $training_completed)
             ->orderBy('id')
             ->paginate($entries);
 
@@ -39,6 +39,7 @@ class TrainorStudents extends Controller
                 'page' => $lastPage,
                 'entries' => $entries,
                 'search' => $search,
+                'training_completed' => $training_completed
             ]);
 
 
@@ -51,7 +52,7 @@ class TrainorStudents extends Controller
             return $redirect;
         }
 
-        return view('trainor.students.index', ['students' => $students]);
+        return view('trainor.students.index', ['students' => $students, 'training_completed' => $training_completed]);
     }
 
     public function viewStudent($id)

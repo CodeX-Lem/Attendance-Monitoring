@@ -62,7 +62,7 @@ class AdminReports extends Controller
         $totalPages = $pdf->getCanvas()->get_page_count();
         $pdf->getCanvas()->page_text(500, 783, 'Page {PAGE_NUM} of {PAGE_COUNT}', null, 8, array(0, 0, 0));
 
-        return $pdf->stream('document.pdf');
+        return $pdf->stream('attendance-report.pdf');
 
         return view('pdf.report', ['attendance' => $attendance, 'dateFrom' => $dateFrom, 'dateTo' => $dateTo, 'search' => $search]);
     }

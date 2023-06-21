@@ -72,10 +72,28 @@
                                 <td>{{$row->student->fullname}}</td>
                                 <td>{{ $row->student->course->course }}</td>
                                 <td>{{ $row->time_in_am ? date('h:i A', strtotime($row->time_in_am)) : '' }}</td>
-                                <td class="fw-bold {{ strtolower($row->status_am) == 'late' ? 'text-danger' : 'text-success'  }}">{{$row->status_am}}</td>
+                                <td class="fw-bold {{ strtolower($row->status_am) == 'on-time' ? 'text-success' : 'text-danger'  }}">
+                                    @php
+                                        $dateNow = date('Y-m-d');
+                                        $time = '05:00 PM';
+
+                                        $absentDate = strtotime($dateNow . $time);
+                                    @endphp
+
+                                @if(strtolower($row->status_am) == 'on-time')
+                                    {{ $row->status_am }}
+                                @elseif($row->status_am == null)
+                                    {{'Absent'}}
+                                @else
+                                    {{ $row->status_am }}
+                                @endif
+
+                                </td>
                                 <td>{{ $row->time_out_am ? date('h:i A', strtotime($row->time_out_am)) : '' }}</td>
                                 <td>{{ $row->time_in_pm ? date('h:i A', strtotime($row->time_in_pm)) : '' }}</td>
-                                <td class="fw-bold {{ strtolower($row->status_pm) == 'late' ? 'text-danger' : 'text-success'  }}">{{$row->status_pm}}</td>
+                                <td class="fw-bold {{ strtolower($row->status_pm) == 'on-time' ? 'text-success' : 'text-danger'  }}">
+                              
+                                </td>
                                 <td>{{ $row->time_out_pm ? date('h:i A', strtotime($row->time_out_pm)) : '' }}</td>
                             </tr>
                         @endforeach
