@@ -5,7 +5,8 @@
     <div class="border bg-white p-0 p-sm-3">
         <div class="container-fluid">
             <div class="row gx-1 gy-2 gy-md-0 mt-3">
-                <form action="{{ route('admin.reports.index') }}" method="GET" class="d-flex align-items-center justify-content-end">
+                <form action="{{ route('admin.reports.index') }}" method="GET"
+                    class="d-flex align-items-center justify-content-end">
                     <div class="col-md-6">
                         <input type="hidden" class="form-control shadow-none rounded-0" name="entries"
                             value="{{ request('entries', 5) }}" autocomplete="off">
@@ -13,20 +14,24 @@
                         <div class="d-flex flex-column flex-md-row gap-2">
                             <div class="d-flex align-items-center gap-2 me-3">
                                 <label class="form-label mt-1">From</label>
-                                <input type="date" class="form-control shadow-none rounded-0" name="date_from" value="{{ $dateFrom }}" onchange="this.form.submit()">
+                                <input type="date" class="form-control shadow-none rounded-0" name="date_from"
+                                    value="{{ $dateFrom }}" onchange="this.form.submit()">
                             </div>
                             <div class="d-flex align-items-center gap-2 me-3">
                                 <label class="form-label mt-1">To</label>
-                                <input type="date" class="form-control shadow-none rounded-0" name="date_to" value="{{ $dateTo }}" onchange="this.form.submit()">
+                                <input type="date" class="form-control shadow-none rounded-0" name="date_to"
+                                    value="{{ $dateTo }}" onchange="this.form.submit()">
                             </div>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control shadow-none rounded-0" placeholder="Search any student or course"
-                                name="search" autocomplete="off" autofocus>
-                            <button type="submit" class="btn btn-success d-inline-flex align-items-center gap-2 rounded-0">
+                            <input type="text" class="form-control shadow-none rounded-0"
+                                placeholder="Search any student or course" name="search" autocomplete="off" autofocus
+                                value="{{ request('search') }}">
+                            <button type="submit"
+                                class="btn btn-success d-inline-flex align-items-center gap-2 rounded-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-search" viewBox="0 0 16 16">
                                     <path
@@ -48,11 +53,11 @@
                             <th scope="col">Fullname</th>
                             <th scope="col">Course</th>
                             <th scope="col">Time-in AM</th>
-                            <th scope="col">Status AM</th>
                             <th scope="col">Time-out AM</th>
                             <th scope="col">Time-in PM</th>
-                            <th scope="col">Status PM</th>
                             <th scope="col">Time-out PM</th>
+                            <th scope="col">Status AM</th>
+                            <th scope="col">Status PM</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,36 +71,24 @@
                         @endphp
 
                         @foreach($attendance as $row)
-                            <tr>
-                                <td>{{$counter++}}</td>
-                                <td>{{ date('F d, Y', strtotime($row->date)); }}</td>
-                                <td>{{$row->student->fullname}}</td>
-                                <td>{{ $row->student->course->course }}</td>
-                                <td>{{ $row->time_in_am ? date('h:i A', strtotime($row->time_in_am)) : '' }}</td>
-                                <td class="fw-bold {{ strtolower($row->status_am) == 'on-time' ? 'text-success' : 'text-danger'  }}">
-                                    @php
-                                        $dateNow = date('Y-m-d');
-                                        $time = '05:00 PM';
-
-                                        $absentDate = strtotime($dateNow . $time);
-                                    @endphp
-
-                                @if(strtolower($row->status_am) == 'on-time')
-                                    {{ $row->status_am }}
-                                @elseif($row->status_am == null)
-                                    {{'Absent'}}
-                                @else
-                                    {{ $row->status_am }}
-                                @endif
-
-                                </td>
-                                <td>{{ $row->time_out_am ? date('h:i A', strtotime($row->time_out_am)) : '' }}</td>
-                                <td>{{ $row->time_in_pm ? date('h:i A', strtotime($row->time_in_pm)) : '' }}</td>
-                                <td class="fw-bold {{ strtolower($row->status_pm) == 'on-time' ? 'text-success' : 'text-danger'  }}">
-                              
-                                </td>
-                                <td>{{ $row->time_out_pm ? date('h:i A', strtotime($row->time_out_pm)) : '' }}</td>
-                            </tr>
+                        <tr>
+                            <td>{{$counter++}}</td>
+                            <td>{{ date('F d, Y', strtotime($row->date)); }}</td>
+                            <td>{{$row->student->fullname}}</td>
+                            <td>{{ $row->student->course->course }}</td>
+                            <td>{{ $row->time_in_am ? date('h:i A', strtotime($row->time_in_am)) : '' }}</td>
+                            <td>{{ $row->time_out_am ? date('h:i A', strtotime($row->time_out_am)) : '' }}</td>
+                            <td>{{ $row->time_in_pm ? date('h:i A', strtotime($row->time_in_pm)) : '' }}</td>
+                            <td>{{ $row->time_out_pm ? date('h:i A', strtotime($row->time_out_pm)) : '' }}</td>
+                            <td
+                                class="fw-bold {{ strtolower($row->status_am) == 'absent' ? 'text-danger' : (strtolower($row->status_am) == 'on-time' ? 'text-success' : 'text-primary')  }}">
+                                {{$row->status_am}}
+                            </td>
+                            <td
+                                class="fw-bold {{ strtolower($row->status_pm) == 'absent' ? 'text-danger' : (strtolower($row->status_pm) == 'on-time' ? 'text-success' : 'text-primary')  }}">
+                                {{$row->status_pm}}
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -127,8 +120,8 @@
                             @php
                             $search = request('search', '');
                             $entries = request('entries', 5);
-                            $dateFrom = request('date_from', 5);
-                            $dateTo = request('date_to', 5);
+                            $dateFrom = request('date_from', date('Y-m-d'));
+                            $dateTo = request('date_to', date('Y-m-d'));
                             $currentPage = $attendance->currentPage();
                             $lastPage = $attendance->lastPage();
                             @endphp
@@ -139,11 +132,12 @@
                                     href="{{ $attendance->previousPageUrl() }}&entries={{ $entries }}&search={{ $search }}&date_from={{ $dateFrom }}&date_to={{ $dateTo }}"
                                     rel="prev">Previous</a></li>
                             @endif
-                
-                            <li class="page-item"><span class="page-link rounded-0 text-nowrap active">{{ $currentPage }}
+
+                            <li class="page-item"><span
+                                    class="page-link rounded-0 text-nowrap active">{{ $currentPage }}
                                     of
                                     {{ $lastPage }}</span></li>
-                
+
                             @if ($currentPage == $lastPage)
                             <li class=" page-item disabled"><span class="page-link rounded-0">Next</span></li>
                             @else
@@ -166,4 +160,9 @@
         </div>
     </div>
 </div>
+
+<script>
+const searchInput = document.querySelector("input[name='search']");
+searchInput.selectionStart = searchInput.selectionEnd = searchInput.value.length;
+</script>
 @endsection

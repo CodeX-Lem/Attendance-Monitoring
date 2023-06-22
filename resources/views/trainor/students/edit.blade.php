@@ -1,4 +1,4 @@
-@extends('admin.layouts.layout')
+@extends('trainor.layouts.layout')
 @section('title','Students')
 @section('content')
 <div class="p-0 p-sm-4">
@@ -10,32 +10,28 @@
             </ol>
         </nav>
         <hr>
-        <form action="{{ route('admin.students.update', ['id' => $student->id]) }}" method="POST"
-            enctype="multipart/form-data">
+        <form action="{{ route('trainor.students.update', ['id' => $student->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <input type="hidden" name="previous_url" value="{{ old('previous_url', $previousUrl) }}">
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label class="form-label">First Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="first_name" autocomplete="off"
-                        value="{{ old('first_name', $student->first_name) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="first_name" autocomplete="off" value="{{ old('first_name', $student->first_name) }}">
                     @error('first_name')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Middle Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="middle_name" autocomplete="off"
-                        value="{{ old('middle_name', $student->middle_name) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="middle_name" autocomplete="off" value="{{ old('middle_name', $student->middle_name) }}">
                     @error('middle_name')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Last Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="last_name" autocomplete="off"
-                        value="{{ old('last_name', $student->last_name) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="last_name" autocomplete="off" value="{{ old('last_name', $student->last_name) }}">
                     @error('last_name')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
@@ -55,8 +51,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                    <input type="date" class="form-control shadow-none rounded-0" name="dob" autocomplete="off"
-                        value="{{ old('dob', $student->dob) }}">
+                    <input type="date" class="form-control shadow-none rounded-0" name="dob" autocomplete="off" value="{{ old('dob', $student->dob) }}">
                     @error('dob')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
@@ -66,7 +61,7 @@
                     <select class="form-select shadow-none rounded-0" name="civil_status">
                         <option value="" @if(old('civil_status', '' )=='' ) selected @endif>--Select Civil Status--
                         </option>
-                        <option value="Single" @if($student->civil_status =='Single' ) selected @endif>Single</option>
+                        <option value="Single" @if($student->civil_status =='Single') selected @endif>Single</option>
                         <option value="Married" @if($student->civil_status=='Married' ) selected @endif>Married</option>
                         <option value="Widowed" @if($student->civil_status=='Widowed' ) selected @endif>Widowed</option>
                         <option value="Divorced" @if($student->civil_status=='Divorced' ) selected @endif>Divorced
@@ -80,16 +75,14 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Nationality <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="nationality" autocomplete="off"
-                        value="{{ old('nationality', $student->nationality) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="nationality" autocomplete="off" value="{{ old('nationality', $student->nationality) }}">
                     @error('nationality')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-8 mb-3">
                     <label class="form-label">Street Address</label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="street" autocomplete="off"
-                        value="{{ old('street', $student->street) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="street" autocomplete="off" value="{{ old('street', $student->street) }}">
                     @error('street')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
@@ -97,8 +90,7 @@
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Barangay <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="barangay" autocomplete="off"
-                        value="{{ old('barangay', $student->barangay) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="barangay" autocomplete="off" value="{{ old('barangay', $student->barangay) }}">
                     @error('barangay')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
@@ -106,8 +98,7 @@
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">City/Municipality <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="city" autocomplete="off"
-                        value="{{ old('city', $student->city) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="city" autocomplete="off" value="{{ old('city', $student->city) }}">
                     @error('city')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
@@ -115,8 +106,7 @@
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">District <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="district" autocomplete="off"
-                        value="{{ old('district', $student->district) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="district" autocomplete="off" value="{{ old('district', $student->district) }}">
                     @error('district')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
@@ -124,8 +114,7 @@
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Province <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="province" autocomplete="off"
-                        value="{{ old('province', $student->province) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="province" autocomplete="off" value="{{ old('province', $student->province) }}">
                     @error('province')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror
@@ -133,9 +122,7 @@
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Highest Grade Completed</label>
-                    <input type="text" class="form-control shadow-none rounded-0" name="highest_grade_completed"
-                        autocomplete="off"
-                        value="{{ old('highest_grade_completed', $student->highest_grade_completed) }}">
+                    <input type="text" class="form-control shadow-none rounded-0" name="highest_grade_completed" autocomplete="off" value="{{ old('highest_grade_completed', $student->highest_grade_completed) }}">
                     @error('highest_grade_completed')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>
                     @enderror

@@ -34,7 +34,7 @@ Route::get('/', function () {
         }
     }
 
-    return view('auth/login');
+    return view('auth.login');
 });
 
 Route::post('/', [UserController::class, 'login'])->name('login');
@@ -42,16 +42,21 @@ Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::prefix(('trainor'))->middleware('isTrainor')->group(function () {
     Route::get('/students', [TrainorStudents::class, 'index'])->name('trainor.students.index');
+    Route::get('/students/create', [TrainorStudents::class, 'create'])->name('trainor.students.create');
+    Route::post('/students/create', [TrainorStudents::class, 'store'])->name('trainor.students.store');
     Route::delete('/students/{id}', [TrainorStudents::class, 'destroy'])->name('trainor.students.destroy');
-    Route::put('/students/mark-as-completed/{id}', [TrainorStudents::class, 'markAsCompleted'])->name('trainor.students.completed');
-    Route::put('/students/mark-as-ongoing/{id}', [TrainorStudents::class, 'markAsOnGoing'])->name('trainor.students.ongoing');
     Route::put('/students/mark-as-accepted/{id}', [TrainorStudents::class, 'markAsAccepted'])->name('trainor.students.accepted');
-    Route::get('/students/qrcode{id}', [QrCodeController::class, 'download'])->name('trainor.students.qrcode');
     Route::get('/students/view-student/{id}', [TrainorStudents::class, 'viewStudent'])->name('trainor.students.view-student');
-
-    Route::get('/reports', [TrainorAttendance::class, 'index'])->name('trainor.reports.index');
+    Route::get('/students/edit/{id}', [TrainorStudents::class, 'show'])->name('trainor.students.show');
+    Route::put('/students/edit/{id}', [TrainorStudents::class, 'update'])->name('trainor.students.update');
+    Route::delete('/students/reject/{id}', [TrainorStudents::class, 'reject'])->name('trainor.students.reject');
 
     Route::get('/dashboard', [TrainorDashboard::class, 'index'])->name('trainor.dashboard');
+
+    Route::get('/students/qrcode{id}', [QrCodeController::class, 'download'])->name('trainor.students.qrcode');
+
+    Route::get('/reports', [TrainorAttendance::class, 'index'])->name('trainor.reports.index');
+    Route::get('/reports/download', [TrainorAttendance::class, 'exportPdf'])->name('trainor.reports.download');
 });
 
 Route::prefix('admin')->middleware('isAdmin')->group(function () {
@@ -73,8 +78,6 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::get('/students/create', [StudentController::class, 'create'])->name('admin.students.create');
     Route::post('/students/create', [StudentController::class, 'store'])->name('admin.students.store');
     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('admin.students.destroy');
-    // Route::put('/students/mark-as-completed/{id}', [StudentController::class, 'markAsCompleted'])->name('admin.students.completed');
-    // Route::put('/students/mark-as-ongoing/{id}', [StudentController::class, 'markAsOnGoing'])->name('admin.students.ongoing');
     Route::put('/students/mark-as-accepted/{id}', [StudentController::class, 'markAsAccepted'])->name('admin.students.accepted');
     Route::get('/students/view-student/{id}', [StudentController::class, 'viewStudent'])->name('admin.students.view-student');
     Route::get('/students/edit/{id}', [StudentController::class, 'show'])->name('admin.students.show');

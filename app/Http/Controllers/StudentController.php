@@ -184,35 +184,6 @@ class StudentController extends Controller
         }
     }
 
-    // public function markAsCompleted($id)
-    // {
-    //     try {
-    //         $student = StudentModel::findorfail($id);
-    //         $data = ['training_completed' => true];
-    //         $student->update($data);
-    //         Alert::success('Success', "Student's training has been marked as completed");
-    //     } catch (Exception $e) {
-    //         Alert::error('Error', "An error occured while marking the student's training as completed");
-    //     } finally {
-    //         return redirect()->back();
-    //     }
-    // }
-
-    // public function markAsOnGoing($id)
-    // {
-    //     try {
-    //         $student = StudentModel::findorfail($id);
-    //         $data = ['training_completed' => false];
-    //         $student->update($data);
-    //         Alert::success('Success', "Student's training has been marked as not yet completed");
-    //     } catch (Exception $e) {
-    //         Alert::error('Error', "An error occured while marking the student's training as not yet completed");
-    //     } finally {
-    //         return redirect()->back();
-    //     }
-    // }
-
-
     public function markAsAccepted($id)
     {
         try {
@@ -264,7 +235,7 @@ class StudentController extends Controller
                 'scholarship_type' => $validatedData['scholarship_type'],
                 'highest_grade_completed' => $request->input('highest_grade_completed'),
                 'scholarship_type' => $validatedData['scholarship_type'],
-                'training_completed' => false,
+                'training_completed' => $validatedData['training_completed'],
             ];
             $student->update($data);
 

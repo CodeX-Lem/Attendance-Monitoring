@@ -26,7 +26,11 @@ class AdminReports extends Controller
                     });
             })
             ->with(['student', 'student.course'])
+            ->join('students', 'attendance.student_id', '=', 'students.id')
+            ->join('courses', 'students.course_id', '=', 'courses.id')
             ->OrderBy('date')
+            ->orderBy('courses.course')
+            ->orderBy('students.fullname')
             ->paginate($entries);
 
         return view('admin.reports.index', ['attendance' => $attendance, 'dateFrom' => $dateFrom, 'dateTo' => $dateTo]);
@@ -35,10 +39,9 @@ class AdminReports extends Controller
     public function exportPdf(Request $request)
     {
         $today = Carbon::today()->toDateString();
-        $dateFrom = $request->input('date_from', $today);
-        $dateTo = $request->input('date_to', $today);
+        $dateFrom = $request->input('date_from') ?? $today;
+        $dateTo = $request->input('date_to') ?? $today;
         $search = $request->input('search', '');
-
         $attendance = AttendanceModel::whereBetween('date', [$dateFrom, $dateTo])
             ->whereHas('student', function ($query) use ($search) {
                 $query->where('fullname', $this->like, '%' . $search . '%')
@@ -47,7 +50,11 @@ class AdminReports extends Controller
                     });
             })
             ->with(['student', 'student.course'])
+            ->join('students', 'attendance.student_id', '=', 'students.id')
+            ->join('courses', 'students.course_id', '=', 'courses.id')
             ->OrderBy('date')
+            ->orderBy('courses.course')
+            ->orderBy('students.fullname')
             ->get();
 
         $pdf = new Dompdf();
@@ -60,7 +67,7 @@ class AdminReports extends Controller
         $pdf->render();
 
         $totalPages = $pdf->getCanvas()->get_page_count();
-        $pdf->getCanvas()->page_text(500, 783, 'Page {PAGE_NUM} of {PAGE_COUNT}', null, 8, array(0, 0, 0));
+        $pdf->getCanvas()->page_text(500, 785, 'Page {PAGE_NUM} of {PAGE_COUNT}', null, 8, array(0, 0, 0));
 
         return $pdf->stream('attendance-report.pdf');
 

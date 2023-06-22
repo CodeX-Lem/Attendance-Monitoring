@@ -28,7 +28,7 @@ class IsTrainor
             $trainor = UserModel::where('trainor_id', '=', $trainorId)->first();
             $course = CourseModel::where('trainor_id', '=', $trainorId)->first();
             View::share(['currentUser' => $trainor]);
-            View::share(['course' => $course->course]);
+            View::share(['trainingProgram' => $course->course]);
             return $next($request);
         } else {
             Session::forget('isAdmin');
