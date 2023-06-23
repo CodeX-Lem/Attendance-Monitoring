@@ -11,15 +11,22 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
         @page :first {
-            margin-top: 50px;
+            /* margin: 0; */
+            /* margin-top: 50px; */
         }
 
         @page {
-            margin-top: 250px;
+            margin: 0;
+            margin-top: 200px;
+            /* margin: 0;
+            margin-top: 200px; */
+            /* margin-top: 250px; */
+            /* margin-top: 250px; */
         }
 
         body {
             font-family: 'Poppins', sans-serif;
+            padding: 2rem;
         }
 
         table {
@@ -27,10 +34,6 @@
         }
 
         .title {
-            text-align: center;
-        }
-
-        .header {
             text-align: center;
         }
 
@@ -60,6 +63,9 @@
 
         .date-filter {
             font-size: 12px;
+            position: fixed;
+            top: 0;
+            left: 30px;
         }
 
         .date-from,
@@ -67,45 +73,53 @@
         .search {
             font-weight: bold;
         }
-
-        .logo-left {
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-        .logo-right {
-            position: absolute;
-            right: 0;
-            top: 0;
-        }
-
         .printed-date {
+            position: fixed;
+            bottom: 15px;
+            left: 30px;
             font-size: 10px;
         }
 
         .nowrap {
             white-space: nowrap;
         }
-
         header {
             position: fixed;
-            left: 0;
-            right: 0;
             top: 0;
+            left: 0;
+            height: 300px;
+            width: 100%;
+            margin-top: -200px;
         }
 
-        footer {
+        footer{
             position: fixed;
-            left: 0px;
-            right: 0px;
-            bottom: 0px;
+            bottom: 0;
+            left: 0;
+            height: 200px;
+            width: 100%;
+        }
+
+        .header-logo{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .footer-logo{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
         }
 
         main {
-            margin-top: 200px;
+            z-index: 9998;
+            /* margin-top: 200px; */
+            /* margin-top: 200px;
+            margin-bottom: 100px; */
             /* Adjust top margin to avoid overlap with header */
-            margin-bottom: 100px;
             /* Adjust bottom margin to avoid overlap with footer */
         }
     </style>
@@ -113,15 +127,7 @@
 
 <body>
     <header>
-        <img class="logo-left" src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('logo.png'))) }}" width="100" height="100">
-        <img class="logo-right" src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('prov-logo.png'))) }}" width="100" height="100">
-
-
-        <h2 class="header">NEGROS OCCIDENTAL<br>
-            LANGUAGE AND INFORMATION <br>
-            TECHNOLOGY CENTER</h2>
-        <H4 class="title">ATTENDANCE REPORT</H4>
-
+       <img class="header-logo" src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('report-header.jpg'))) }}" alt="Nolitc Header">
         <div class="date-filter">
             <span><span class="date-from">Date From:</span> {{ $dateFrom }}</span>
             <span><span class="date-to">Date To:</span> {{ $dateTo }}</span>
@@ -129,8 +135,11 @@
     </header>
 
     <footer>
-        <p class="printed-date">Printed Date: {{ date('Y-m-d h:i A') }}</p>
+        <img class="footer-logo" src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('report-footer.jpg'))) }}" alt="Nolitc Footer">
     </footer>
+
+    <p class="printed-date">Printed Date: {{ date('Y-m-d h:i A') }}</p>
+
 
     <main>
         <table style="font-size: 12px;">

@@ -127,11 +127,7 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Training Program <span class="text-danger">*</span></label>
                     <select class="form-select shadow-none rounded-0" name="course_id">
-                        <option value="" @if(old('course_id')=='' ) selected @endif>--Select Course--</option>
-                        @foreach($courses as $course)
-                        <option value="{{ $course->id }}" @if(old('course_id')==$course->id) selected
-                            @endif>{{ $course->course }}</option>
-                        @endforeach
+                        <option value="{{ $trainingProgram->id }}" selected>{{ $trainingProgram->course }}</option>
                     </select>
                     @error('course_id')
                     <div class="form-text text-danger mt-2">{{ $message }}</div>

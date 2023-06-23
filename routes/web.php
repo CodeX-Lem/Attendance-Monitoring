@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminReports;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TrainorAttendance;
@@ -57,6 +58,8 @@ Route::prefix(('trainor'))->middleware('isTrainor')->group(function () {
 
     Route::get('/reports', [TrainorAttendance::class, 'index'])->name('trainor.reports.index');
     Route::get('/reports/download', [TrainorAttendance::class, 'exportPdf'])->name('trainor.reports.download');
+
+    Route::post('/students/import', [ImportController::class, 'import'])->name('trainor.students.import');
 });
 
 Route::prefix('admin')->middleware('isAdmin')->group(function () {

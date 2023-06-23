@@ -59,7 +59,7 @@ class AdminReports extends Controller
 
         $pdf = new Dompdf();
         $pdf->loadHtml(View::make('pdf.report', ['attendance' => $attendance, 'dateFrom' => $dateFrom, 'dateTo' => $dateTo, 'search' => $search])->render());
-        $pdf->setPaper('A4', 'portrait');
+        $pdf->setPaper('Legal', 'portrait');
 
         $options = new Options();
         $options->set('isPhpEnabled', true);
@@ -67,7 +67,7 @@ class AdminReports extends Controller
         $pdf->render();
 
         $totalPages = $pdf->getCanvas()->get_page_count();
-        $pdf->getCanvas()->page_text(500, 785, 'Page {PAGE_NUM} of {PAGE_COUNT}', null, 8, array(0, 0, 0));
+        $pdf->getCanvas()->page_text(550, 975, 'Page {PAGE_NUM} of {PAGE_COUNT}', null, 8, array(0, 0, 0));
 
         return $pdf->stream('attendance-report.pdf');
 
