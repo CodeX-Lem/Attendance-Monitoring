@@ -10,7 +10,9 @@ class ImportController extends Controller
 {
     public function import()
     {
-        Excel::import(new ImportStudents, request()->file('student_file'));
-        return redirect()->back();
+        $import = new ImportStudents();
+        Excel::import($import, request()->file('student_file'));
+        $importedData = $import->getImportedData();
+        dd($importedData);
     }
 }

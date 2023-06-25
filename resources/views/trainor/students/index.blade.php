@@ -37,11 +37,11 @@
                 </div>
             </form>
 
-            {{-- <form action="{{route('trainor.students.import')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('trainor.students.import')}}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <input type="file" name="student_file" accept=".xlsx, .csv, .xls">
+                <input type="file" name="student_file" accept=".xlsx, .csv, .xls" required>
                 <button class="btn btn-success btn-small rounded-0 shadow-none" type="submit">Import</button>
-            </form> --}}
+            </form>
 
             <div class="table-responsive mt-3">
                 <table class="table table-bordered table-striped align-middle" style="font-size: 14px;">

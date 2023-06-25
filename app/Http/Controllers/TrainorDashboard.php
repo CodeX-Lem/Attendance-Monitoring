@@ -25,33 +25,49 @@ class TrainorDashboard extends Controller
             ->whereDate('date', $today)
             ->count();
 
-        $lateCount = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
+        $lateCountAM = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
             $query->where('trainor_id', '=', $trainorId);
         })
             ->whereDate('date', $today)
-            ->where(function ($query) {
-                $query->where('status_am', 'Late')
-                    ->orWhere('status_pm', 'Late');
-            })
+            ->where('status_am', '=', 'Late')
             ->count();
 
-        $onTimeCount = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
+        $lateCountPM = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
             $query->where('trainor_id', '=', $trainorId);
         })
             ->whereDate('date', $today)
-            ->where(function ($query) {
-                $query->where('status_am', 'On-Time')
-                    ->orWhere('status_pm', 'On-Time');
-            })
+            ->where('status_pm', '=', 'Late')
             ->count();
 
-        $attendance = AttendanceModel::with('student')
-            ->whereHas('student.course', function ($query) use ($trainorId) {
-                $query->where('trainor_id', '=', $trainorId);
-            })
-            ->whereDate('date', $today)->get();
+        $onTimeCountAM = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
+            $query->where('trainor_id', '=', $trainorId);
+        })
+            ->whereDate('date', $today)
+            ->where('status_am', '=', 'On-Time')
+            ->count();
 
-        $data = ['totalStudents' => $totalStudents, 'totalAttendanceToday' => $totalAttendanceToday, 'lateCount' => $lateCount, 'onTimeCount' => $onTimeCount, 'attendance' => $attendance];
+        $onTimeCountPM = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
+            $query->where('trainor_id', '=', $trainorId);
+        })
+            ->whereDate('date', $today)
+            ->where('status_pm', '=', 'On-Time')
+            ->count();
+
+        $absentCountAM = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
+            $query->where('trainor_id', '=', $trainorId);
+        })
+            ->whereDate('date', $today)
+            ->where('status_am', '=', 'Absent')
+            ->count();
+
+        $absentCountPM = AttendanceModel::whereHas('student.course', function ($query) use ($trainorId) {
+            $query->where('trainor_id', '=', $trainorId);
+        })
+            ->whereDate('date', $today)
+            ->where('status_pm', '=', 'Absent')
+            ->count();
+
+        $data = ['totalStudents' => $totalStudents, 'totalAttendanceToday' => $totalAttendanceToday,  'lateCountAM' => $lateCountAM, 'lateCountPM' => $lateCountPM, 'onTimeCountAM' => $onTimeCountAM, 'onTimeCountPM' => $onTimeCountPM, 'absentCountAM' => $absentCountAM, 'absentCountPM' => $absentCountPM];
 
         return view('trainor.dashboard.index', $data);
     }

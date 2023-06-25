@@ -19,21 +19,32 @@ class DashboardController extends Controller
         $totalCourses = CourseModel::count();
         $totalAttendanceToday = AttendanceModel::where('date', '=', $today)->count();
 
-        $lateCount = AttendanceModel::whereDate('date', $today)
-            ->where(function ($query) {
-                $query->where('status_am', 'Late')
-                    ->orWhere('status_pm', 'Late');
-            })
+        $lateCountAM = AttendanceModel::whereDate('date', $today)
+            ->where('status_am', '=', 'Late')
             ->count();
 
-        $onTimeCount = AttendanceModel::whereDate('date', $today)
-            ->where(function ($query) {
-                $query->where('status_am', 'On-Time')
-                    ->orWhere('status_pm', 'On-Time');
-            })
+        $lateCountPM = AttendanceModel::whereDate('date', $today)
+            ->where('status_pm', '=', 'Late')
             ->count();
 
-        $data = ['totalStudents' => $totalStudents, 'totalTrainors' => $totalTrainors, 'totalCourses' => $totalCourses, 'totalAttendanceToday' => $totalAttendanceToday, 'lateCount' => $lateCount, 'onTimeCount' => $onTimeCount];
+
+        $onTimeCountAM = AttendanceModel::whereDate('date', $today)
+            ->where('status_am', '=', 'On-Time')
+            ->count();
+
+        $onTimeCountPM = AttendanceModel::whereDate('date', $today)
+            ->where('status_pm', '=', 'On-Time')
+            ->count();
+
+        $absentCountAM = AttendanceModel::whereDate('date', $today)
+            ->where('status_am', '=', 'Absent')
+            ->count();
+
+        $absentCountPM = AttendanceModel::whereDate('date', $today)
+            ->where('status_Pm', '=', 'Absent')
+            ->count();
+
+        $data = ['totalStudents' => $totalStudents, 'totalTrainors' => $totalTrainors, 'totalCourses' => $totalCourses, 'totalAttendanceToday' => $totalAttendanceToday, 'lateCountAM' => $lateCountAM, 'lateCountPM' => $lateCountPM, 'onTimeCountAM' => $onTimeCountAM, 'onTimeCountPM' => $onTimeCountPM, 'absentCountAM' => $absentCountAM, 'absentCountPM' => $absentCountPM];
 
         return view('admin.dashboard.index', $data);
     }

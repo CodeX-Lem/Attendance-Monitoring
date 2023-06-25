@@ -52,12 +52,21 @@ class AttendanceController extends Controller
 
         // TIME IN THE STUDENT IN AM IF NOT TIMED IN AND CURRENT TIME IS LESS THAN 12:00 PM
         if ($attendance->time_in_am == null && $currentTime < $timeOutAm) {
+            $status = '';
+            $timeInAmAbsent = strtotime(Carbon::createFromTimestamp($timeOutAm)->subHour()->format('h:i:s A'));
+            if ($currentTime < $timeInAm) {
+                $status = 'On-Time';
+            } elseif ($currentTime >= $timeInAmAbsent) {
+                $status = 'Absent';
+            } else {
+                $status = 'Late';
+            }
             $data = [
                 'time_in_am' => Carbon::now()->toTimeString(),
-                'status_am' => $currentTime < $timeInAm ? 'On-Time' : 'Late'
+                'status_am' => $status
             ];
             $attendance->update($data);
-            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in']);
+            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in ' . $status]);
         }
 
         // DISPLAY ERROR MESSAGE IF STUDENT TRIES TO TIME OUT IN AM IN LESS THAN 12:00 PM
@@ -82,12 +91,21 @@ class AttendanceController extends Controller
 
         // TIME IN THE STUDENT IN PM IF NOT TIMED IN AND CURRENT TIME IS GREATER THAN 12:00 PM
         if ($attendance->time_in_pm == null && $currentTime >= $timeOutAm) {
+            $status = '';
+            $timeInPmAbsent = strtotime(Carbon::createFromTimestamp($timeOutPm)->subHour()->format('h:i:s A'));
+            if ($currentTime < $timeInPm) {
+                $status = 'On-Time';
+            } elseif ($currentTime >= $timeInPmAbsent) {
+                $status = 'Absent';
+            } else {
+                $status = 'Late';
+            }
             $data = [
                 'time_in_pm' => Carbon::now()->toTimeString(),
-                'status_pm' => $currentTime < $timeInPm ? 'On-Time' : 'Late'
+                'status_pm' => $status
             ];
             $attendance->update($data);
-            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in']);
+            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in ' . $status]);
         }
 
         // DISPLAY ERROR MESSAGE IF STUDENT TRIES TO TIME OUT IN LESS THAN 05:00 PM

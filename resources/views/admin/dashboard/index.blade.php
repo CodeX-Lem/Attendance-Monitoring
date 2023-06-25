@@ -96,13 +96,15 @@
                 </div>
             </div>
             <div class="card-footer border-0 p-0">
-                <a href="{{ route('admin.reports.index') }}" class="text-decoration-none d-block text-center py-1 card-dashboard__link">More
+                <a href="{{ route('admin.reports.index') }}"
+                    class="text-decoration-none d-block text-center py-1 card-dashboard__link">More
                     Info</a>
             </div>
         </div>
     </div>
 </div>
-<div class="container my-5 d-flex justify-content-center" style="height: 400px;">
+
+<div class="p-3 d-none d-sm-block" style="height:400px">
     <canvas id="attendanceChart" style="width: 100%; height:100%"></canvas>
 </div>
 
@@ -110,12 +112,14 @@
 
 <script>
 // Create an array of the counts
-const lateCount = "{{ $lateCount }}";
-const onTimeCount = "{{ $onTimeCount }}";
+const onTimeCountAM = "{{ $onTimeCountAM }}";
+const onTimeCountPM = "{{ $onTimeCountPM }}";
+const lateCountAM = "{{ $lateCountAM }}";
+const lateCountPM = "{{ $lateCountPM }}";
+const absentCountAM = "{{ $absentCountAM }}";
+const absentCountPM = "{{ $absentCountPM }}";
 
-if (lateCount == 0 && onTimeCount == 0) document.querySelector("#attendanceChart").style.display = 'none';
-
-const attendanceCounts = [lateCount, onTimeCount];
+const attendance = [onTimeCountAM, onTimeCountPM, lateCountAM, lateCountPM, absentCountAM, absentCountPM];
 
 // Get the canvas element
 const chartCanvas = document.getElementById('attendanceChart');
@@ -124,15 +128,23 @@ const devicePixelRatio = window.devicePixelRatio || 1; // Get the device's pixel
 
 // Create the chart
 new Chart(chartCanvas, {
-    type: 'pie',
+    type: 'bar',
     data: {
-        labels: ['Late', 'On Time'],
+        labels: ['On-Time AM', 'On-Time PM', 'Late AM', 'Late PM', 'Absent AM', 'Absent PM'],
         datasets: [{
-            data: attendanceCounts,
-            backgroundColor: ['blue', 'green'],
+            maxBarThickness: 120,
+            data: attendance,
+            backgroundColor: ['#9BD0F5'],
         }]
     },
     options: {
+        scales: {
+            y: {
+                ticks: {
+                    precision: 0
+                }
+            }
+        },
         devicePixelRatio: devicePixelRatio, // Set the chart's rendering resolution
         responsive: true,
         plugins: {
@@ -140,7 +152,7 @@ new Chart(chartCanvas, {
                 enabled: true // Disable tooltips
             },
             legend: {
-                display: true, // Show the legend
+                display: false, // Show the legend
                 position: 'top', // Set the position of the legend (options: top, bottom, left, right)
                 labels: {
                     font: {
