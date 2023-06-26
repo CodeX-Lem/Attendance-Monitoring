@@ -1,0 +1,38 @@
+# fly.toml app configuration file generated for at-team2-app-sdtp on 2023-06-23T16:56:14+08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "at-team2-app-sdtp"
+primary_region = "sin"
+console_command = "php /var/www/html/artisan tinker"
+
+[build]
+  [build.args]
+    NODE_VERSION = "18"
+    PHP_VERSION = "8.2"
+
+[env]
+  APP_ENV = "local"
+  APP_DEBUG = "true"
+  APP_NAME = "Attendance Tracker Team 2"
+
+  DB_CONNECTION="pgsql"
+  DB_HOST="db.viwnwxgkmbnajjlsrkhh.supabase.co"
+  DB_PORT="5432"
+  DB_DATABASE="postgres"
+  DB_USERNAME="postgres"
+  DB_PASSWORD="nalipatanko"
+
+  LOG_CHANNEL = "stderr"
+  LOG_LEVEL = "info"
+  LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
+  SESSION_DRIVER = "cookie"
+  SESSION_SECURE_COOKIE = "true"
+
+[http_service]
+  internal_port = 8080
+  force_https = false
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0

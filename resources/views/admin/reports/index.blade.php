@@ -154,7 +154,7 @@
                     <input type="hidden" name="date_from" value="{{ request('date_from') }}">
                     <input type="hidden" name="date_to" value="{{ request('date_to') }}">
                     <input type="hidden" name="search" value="{{ request('search') }}">
-                    <button type="submit" class="btn btn-link">Download PDF</button>
+                    <button type="submit" class="btn btn-link">View PDF</button>
                 </form>
             </div>
         </div>

@@ -123,6 +123,7 @@ class TrainorStudents extends Controller
 
             Alert::success('Success', 'New Student has been added');
         } catch (Exception $e) {
+            dd($e);
             Alert::error('Error', 'An error occured while adding the student');
         } finally {
             return redirect($request->input('previous_url'));

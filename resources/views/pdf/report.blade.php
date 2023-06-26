@@ -5,23 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Attendance Report</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
-        @page :first {
-            /* margin: 0; */
-            /* margin-top: 50px; */
-        }
-
         @page {
             margin: 0;
             margin-top: 200px;
-            /* margin: 0;
-            margin-top: 200px; */
-            /* margin-top: 250px; */
-            /* margin-top: 250px; */
         }
 
         body {
@@ -122,6 +112,15 @@
             /* Adjust top margin to avoid overlap with header */
             /* Adjust bottom margin to avoid overlap with footer */
         }
+
+        .footer::after {
+            content: counter(page);
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            }
     </style>
 </head>
 
@@ -133,7 +132,6 @@
             <span><span class="date-to">Date To:</span> {{ $dateTo }}</span>
         </div>
     </header>
-
     <footer>
         <img class="footer-logo" src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('report-footer.jpg'))) }}" alt="Nolitc Footer">
     </footer>

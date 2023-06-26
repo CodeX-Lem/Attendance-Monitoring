@@ -41,7 +41,7 @@ class DashboardController extends Controller
             ->count();
 
         $absentCountPM = AttendanceModel::whereDate('date', $today)
-            ->where('status_Pm', '=', 'Absent')
+            ->where('status_pm', '=', 'Absent')
             ->count();
 
         $data = ['totalStudents' => $totalStudents, 'totalTrainors' => $totalTrainors, 'totalCourses' => $totalCourses, 'totalAttendanceToday' => $totalAttendanceToday, 'lateCountAM' => $lateCountAM, 'lateCountPM' => $lateCountPM, 'onTimeCountAM' => $onTimeCountAM, 'onTimeCountPM' => $onTimeCountPM, 'absentCountAM' => $absentCountAM, 'absentCountPM' => $absentCountPM];
