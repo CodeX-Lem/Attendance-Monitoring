@@ -88,6 +88,7 @@
             left: 0;
             height: 200px;
             width: 100%;
+            z-index: -1;
         }
 
         .header-logo{
@@ -106,21 +107,7 @@
 
         main {
             z-index: 9998;
-            /* margin-top: 200px; */
-            /* margin-top: 200px;
-            margin-bottom: 100px; */
-            /* Adjust top margin to avoid overlap with header */
-            /* Adjust bottom margin to avoid overlap with footer */
         }
-
-        .footer::after {
-            content: counter(page);
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            }
     </style>
 </head>
 
@@ -181,6 +168,12 @@
             </tbody>
         </table>
     </main>
+
+    <script type="text/php">
+        if ( isset($pdf) ) {
+            $pdf->page_text(550, 970, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 8, array(0,0,0));
+        }
+    </script> 
 </body>
 
 </html>

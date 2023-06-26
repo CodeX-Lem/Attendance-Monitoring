@@ -89,6 +89,7 @@ class TrainorStudents extends Controller
                 $fileName = $request->file('image')->getClientOriginalName();
                 $imageName = time() . '-' . $fileName;
                 $request->file('image')->move(public_path('storage/images'), $imageName);
+                $request->file('image')->store('images', 'public');
             }
 
 
@@ -123,7 +124,6 @@ class TrainorStudents extends Controller
 
             Alert::success('Success', 'New Student has been added');
         } catch (Exception $e) {
-            dd($e);
             Alert::error('Error', 'An error occured while adding the student');
         } finally {
             return redirect($request->input('previous_url'));

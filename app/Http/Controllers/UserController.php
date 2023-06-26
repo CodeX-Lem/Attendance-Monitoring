@@ -10,6 +10,7 @@ use App\Models\UserModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -191,13 +192,8 @@ class UserController extends Controller
 
     public function logout()
     {
-        if (Session::has('isAdmin')) {
-            Session::pull('isAdmin');
-        }
-        if (Session::has('trainor_id')) {
-            Session::pull('trainor_id');
-        }
-
+        Auth::logout();
+        Session::flush();
         return redirect('/');
     }
 }
