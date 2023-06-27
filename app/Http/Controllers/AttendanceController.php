@@ -20,7 +20,7 @@ class AttendanceController extends Controller
 
         $student = StudentModel::where('qr_code', $qrCode)->first();
 
-        if (!$student) return view('attendance.index')->with('message', 'Student Not Found');
+        if (!$student) return view('attendance.index')->with('status', 'Student Not Found');
 
         if ($this->hasTakenAttendance($student->course_id)) {
             return $this->updateAttendance($student);
@@ -66,7 +66,7 @@ class AttendanceController extends Controller
                 'status_am' => $status
             ];
             $attendance->update($data);
-            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in ' . $status]);
+            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in ' . $status, 'timeInStatus' => $status]);
         }
 
         // DISPLAY ERROR MESSAGE IF STUDENT TRIES TO TIME OUT IN AM IN LESS THAN 12:00 PM
@@ -105,7 +105,7 @@ class AttendanceController extends Controller
                 'status_pm' => $status
             ];
             $attendance->update($data);
-            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in ' . $status]);
+            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in ' . $status, 'timeInStatus' => $status]);
         }
 
         // DISPLAY ERROR MESSAGE IF STUDENT TRIES TO TIME OUT IN LESS THAN 05:00 PM

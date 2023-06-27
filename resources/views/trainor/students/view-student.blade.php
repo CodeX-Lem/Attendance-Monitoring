@@ -1,6 +1,29 @@
 @extends('trainor.layouts.layout')
 @section('title','Students')
 @section('content')
+
+<style>
+    .profile {
+        position: relative;
+    }
+
+    .change-profile {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        font-weight: bold;
+        padding: 5px;
+        width: 100%;
+        text-align: center;
+        opacity: 0;
+        transition: all 0.3s ease-out;
+    }
+
+    .profile:hover .change-profile {
+        opacity: 1;
+    }
+</style>
+
 <div class="p-0 p-sm-4">
     <div class="border bg-white p-3">
         <nav style="--bs-breadcrumb-divider: '/';">
@@ -34,8 +57,19 @@
         </div>
         <div class="row">
             <div class="col-xl-3">
-                <div class="border mb-3" style="width: 200px; height: 200px">
-                    <img src="{{ asset('storage/images/' . $student->image) }}" alt="Profile Pic" style="width:100%; height: 100%" class="object-fit-cover">
+                <div class="border mb-3 profile" style="width: 200px; height: 200px">
+                    <label for="image" class="h-100">
+                        <p class="change-profile" style="cursor:pointer;">Change Profile</p>
+                        <img src="data:image/jpeg;base64,{{ $student->image }}" alt="Profile Pic" style="width:100%; height: 100%;cursor:pointer; object-fit:cover;">
+                    </label>
+                    <form action="{{ route('trainor.students.change-profile', ['id' => $student->id]) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <input class="d-none" type="file" name="image" id="image" accept=" .png, .jpeg, .jpg" onchange="this.form.submit()">
+                    </form>
+                    @error('image')
+                    <p class="text-danger text-center">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 

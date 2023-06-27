@@ -53,6 +53,7 @@
                             <th scope="col">Training Program</th>
                             <th scope="col">Municipality/City</th>
                             <th scope="col">Training Status</th>
+                            <th scope="col">Admission Status</th>
                             <th scole="col" class="text-end">Actions</th>
                         </tr>
                     </thead>
@@ -68,147 +69,106 @@
                         @foreach($students as $student)
                         <tr>
                             <th scope="row">{{ $counter++ }}</th>
-                            <td> {!!
+                            <td class="text-center" style="width: 80px;"> {!!
                                 QrCode::size(50)->generate($student->qr_code)
                                 !!}</td>
                             <td>{{ $student->fullname }}</td>
                             <td>{{ $student->course->course }}</td>
                             <td>{{ $student->city }}</td>
                             <td>{{ $student->training_status }}</td>
-                            {{-- <td>
-                                @if($student->training_completed)
-                                <div class="d-flex align-items-center gap-2">
-                                    <span>Completed</span>
-                                    <form action="{{ route('trainor.students.ongoing', ['id' => $student->id]) }}"
-                            method="POST">
-                            @csrf
-                            @method('PUT')
-                            <button type="submit" class="badge text-bg-danger border-0">Mark as not yet
-                                completed</button>
+                            <td>
+                                <span class="badge {{ $student->accepted ? 'text-bg-success' : 'text-bg-danger' }}">{{ $student->accepted ? 'Accepted' : 'Pending' }}</span>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-end">
+                                    <div class="dropdown">
+                                        <button class="dropdown-toggle border-1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <ul class="dropdown-menu text-small shadow rounded-0">
+                                            <li>
+                                                <a href="{{ route('trainor.students.qrcode', ['id' => $student->id]) }}" class="dropdown-item">
+                                                    Download Qr Code
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('trainor.students.view-student', ['id' => $student->id]) }}" class="dropdown-item">
+                                                    View Info
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('trainor.students.show', ['id' => $student->id]) }}" class="dropdown-item">
+                                                    Edit
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('trainor.students.destroy',['id' => $student->id]) }}" class="dropdown-item" data-confirm-delete="true">
+                                                    Delete
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <div class="row m-0 gy-2 gy-md-0 justify-content-between">
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center gap-2">
+                            <span>Show</span>
+                            <form action="{{ route('trainor.students.index') }}">
+                                <select name="entries" class="form-select form-select-sm shadow-none rounded-0" onchange="this.form.submit()">
+                                    <option value="5" {{ $students->perPage() == 5 ? 'selected' : '' }}>5</option>
+                                    <option value="10" {{ $students->perPage() == 10 ? 'selected' : '' }}>10</option>
+                                    <option value="15" {{ $students->perPage() == 15 ? 'selected' : '' }}>15</option>
+                                    <option value="20" {{ $students->perPage() == 20 ? 'selected' : '' }}>20</option>
+                                </select>
+                                <input type="hidden" class="form-control shadow-none rounded-0" name="search" value="{{ request('search', '') }}">
+
+                                <input type="hidden" class="form-control shadow-none rounded-0" name="training_completed" value="{{ request('training_completed', '0') }}">
+
+
+                                <input type="hidden" class="form-control shadow-none rounded-0" name="course_id" value="{{ request('course_id', '') }}">
                             </form>
-            </div>
-            @else
-            <div class="d-flex align-items-center gap-2">
-                <span>Not Yet Completed</span>
-                <form action="{{ route('trainor.students.completed', ['id' => $student->id]) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <button type="submit" class="badge text-bg-primary border-0">Mark as completed</button>
-                </form>
-            </div>
-            @endif
-            </td> --}}
-            {{-- <td>
-                                @if($student->accepted == 0)
-                                <div class="d-flex align-items-center gap-2">
-                                    <form action="{{ route('trainor.students.accepted', ['id' => $student->id]) }}"
-            method="POST">
-            @csrf
-            @method('PUT')
-            <button type="submit" class="badge text-bg-success border-0">Accept</button>
-            </form>
-            <a href="{{ route('trainor.students.destroy', ['id' => $student->id]) }}" class="mt-1 badge text-bg-danger text-decoration-none" data-confirm-delete="true">Reject</a>
-        </div>
-        @elseif($student->accepted == 1)
-        <div class="d-flex align-items-center gap-2">
-            <form action="{{ route('trainor.students.accepted', ['id' => $student->id]) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <button type="submit" class="badge text-bg-success border-0">Accepted</button>
-            </form>
-        </div>
-        @endif
-        </td> --}}
-        <td>
-            <div class="d-flex justify-content-end">
-                <div class="dropdown">
-                    <button class="dropdown-toggle border-1" data-bs-toggle="dropdown" aria-expanded="false">
-                        Action
-                    </button>
-                    <ul class="dropdown-menu text-small shadow position-fixed rounded-0">
-                        <li>
-                            <a href="{{ route('trainor.students.qrcode', ['id' => $student->id]) }}" class="dropdown-item">
-                                Download Qr Code
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('trainor.students.view-student', ['id' => $student->id]) }}" class="dropdown-item">
-                                View Info
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('trainor.students.show', ['id' => $student->id]) }}" class="dropdown-item">
-                                Edit
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('trainor.students.destroy',['id' => $student->id]) }}" class="dropdown-item" data-confirm-delete="true">
-                                Delete
-                            </a>
-                        </li>
-                    </ul>
+                            <span>Entries</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <ul class="pagination">
+                            @php
+                            $search = request('search', '');
+                            $entries = request('entries', 5);
+                            $trainingCompleted = request('training_completed','0');
+                            $course_id = request('course_id','');
+                            $currentPage = $students->currentPage();
+                            $lastPage = $students->lastPage();
+                            @endphp
+                            @if ($currentPage == 1)
+                            <li class="page-item disabled"><span class="page-link rounded-0">Previous</span></li>
+                            @else
+                            <li class="page-item"><a class="page-link shadow-none rounded-0" href="{{ $students->previousPageUrl() }}&entries={{ $entries }}&search={{ $search }}&training_completed={{ $trainingCompleted }}&course_id={{ $course_id }}" rel="prev">Previous</a></li>
+                            @endif
+
+                            <li class="page-item"><span class="page-link rounded-0 text-nowrap active">{{ $currentPage }}
+                                    of
+                                    {{ $lastPage }}</span></li>
+
+                            @if ($currentPage == $lastPage)
+                            <li class=" page-item disabled"><span class="page-link rounded-0">Next</span></li>
+                            @else
+                            <li class="page-item"><a class="page-link shadow-none rounded-0" href="{{ $students->nextPageUrl() }}&entries={{ $entries }}&search={{ $search }}&training_completed={{ $trainingCompleted }}&course_id={{ $course_id }}" rel="next">Next</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </td>
-        </tr>
-        @endforeach
-        </tbody>
-        </table>
 
-        <div class="row m-0 gy-2 gy-md-0 justify-content-between">
-            <div class="col-auto">
-                <div class="d-flex align-items-center gap-2">
-                    <span>Show</span>
-                    <form action="{{ route('trainor.students.index') }}">
-                        <select name="entries" class="form-select form-select-sm shadow-none rounded-0" onchange="this.form.submit()">
-                            <option value="5" {{ $students->perPage() == 5 ? 'selected' : '' }}>5</option>
-                            <option value="10" {{ $students->perPage() == 10 ? 'selected' : '' }}>10</option>
-                            <option value="15" {{ $students->perPage() == 15 ? 'selected' : '' }}>15</option>
-                            <option value="20" {{ $students->perPage() == 20 ? 'selected' : '' }}>20</option>
-                        </select>
-                        <input type="hidden" class="form-control shadow-none rounded-0" name="search" value="{{ request('search', '') }}">
-
-                        <input type="hidden" class="form-control shadow-none rounded-0" name="training_completed" value="{{ request('training_completed', '0') }}">
-
-
-                        <input type="hidden" class="form-control shadow-none rounded-0" name="course_id" value="{{ request('course_id', '') }}">
-                    </form>
-                    <span>Entries</span>
-                </div>
-            </div>
-            <div class="col-auto">
-                <ul class="pagination">
-                    @php
-                    $search = request('search', '');
-                    $entries = request('entries', 5);
-                    $trainingCompleted = request('training_completed','0');
-                    $course_id = request('course_id','');
-                    $currentPage = $students->currentPage();
-                    $lastPage = $students->lastPage();
-                    @endphp
-                    @if ($currentPage == 1)
-                    <li class="page-item disabled"><span class="page-link rounded-0">Previous</span></li>
-                    @else
-                    <li class="page-item"><a class="page-link shadow-none rounded-0" href="{{ $students->previousPageUrl() }}&entries={{ $entries }}&search={{ $search }}&training_completed={{ $trainingCompleted }}&course_id={{ $course_id }}" rel="prev">Previous</a></li>
-                    @endif
-
-                    <li class="page-item"><span class="page-link rounded-0 text-nowrap active">{{ $currentPage }}
-                            of
-                            {{ $lastPage }}</span></li>
-
-                    @if ($currentPage == $lastPage)
-                    <li class=" page-item disabled"><span class="page-link rounded-0">Next</span></li>
-                    @else
-                    <li class="page-item"><a class="page-link shadow-none rounded-0" href="{{ $students->nextPageUrl() }}&entries={{ $entries }}&search={{ $search }}&training_completed={{ $trainingCompleted }}&course_id={{ $course_id }}" rel="next">Next</a>
-                    </li>
-                    @endif
-                </ul>
+                {{-- <x-pagination :pageData="$students" route="{{ route('trainor.students.index') }}"></x-pagination> --}}
             </div>
         </div>
-
-        {{-- <x-pagination :pageData="$students" route="{{ route('trainor.students.index') }}"></x-pagination> --}}
     </div>
-</div>
-</div>
 </div>
 @endsection

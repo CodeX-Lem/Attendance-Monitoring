@@ -51,6 +51,7 @@ Route::prefix(('trainor'))->middleware('isTrainor')->group(function () {
     Route::get('/students/edit/{id}', [TrainorStudents::class, 'show'])->name('trainor.students.show');
     Route::put('/students/edit/{id}', [TrainorStudents::class, 'update'])->name('trainor.students.update');
     Route::delete('/students/reject/{id}', [TrainorStudents::class, 'reject'])->name('trainor.students.reject');
+    Route::put('students/change-profile/{id}', [TrainorStudents::class, 'changeProfile'])->name('trainor.students.change-profile');
 
     Route::get('/dashboard', [TrainorDashboard::class, 'index'])->name('trainor.dashboard');
 
@@ -86,6 +87,7 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::get('/students/edit/{id}', [StudentController::class, 'show'])->name('admin.students.show');
     Route::put('/students/edit/{id}', [StudentController::class, 'update'])->name('admin.students.update');
     Route::delete('/students/reject/{id}', [StudentController::class, 'reject'])->name('admin.students.reject');
+    Route::put('students/change-profile/{id}', [StudentController::class, 'changeProfile'])->name('admin.students.change-profile');
 
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');

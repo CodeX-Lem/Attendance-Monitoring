@@ -9,6 +9,7 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
         @page {
             margin: 0;
             margin-top: 200px;
@@ -63,6 +64,7 @@
         .search {
             font-weight: bold;
         }
+
         .printed-date {
             position: fixed;
             bottom: 15px;
@@ -73,6 +75,7 @@
         .nowrap {
             white-space: nowrap;
         }
+
         header {
             position: fixed;
             top: 0;
@@ -82,7 +85,7 @@
             margin-top: -200px;
         }
 
-        footer{
+        footer {
             position: fixed;
             bottom: 0;
             left: 0;
@@ -91,14 +94,14 @@
             z-index: -1;
         }
 
-        .header-logo{
+        .header-logo {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
         }
 
-        .footer-logo{
+        .footer-logo {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -109,11 +112,13 @@
             z-index: 9998;
         }
     </style>
+
+    <link rel="shortcut icon" href="{{ asset('icon.ico') }}" type="image/x-icon">
 </head>
 
 <body>
     <header>
-       <img class="header-logo" src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('report-header.jpg'))) }}" alt="Nolitc Header">
+        <img class="header-logo" src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('report-header.jpg'))) }}" alt="Nolitc Header">
         <div class="date-filter">
             <span><span class="date-from">Date From:</span> {{ $dateFrom }}</span>
             <span><span class="date-to">Date To:</span> {{ $dateTo }}</span>

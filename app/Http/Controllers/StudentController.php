@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Students\ChangeProfileRequest;
 use App\Http\Requests\Students\StoreStudentRequest;
 use App\Http\Requests\Students\UpdateStudentRequest;
 use App\Models\StudentModel;
@@ -30,6 +31,7 @@ class StudentController extends Controller
                 $query->select('id', 'course')->where('id', '=', $course_id);
             }
         })
+            ->select('id', 'course_id', 'qr_code', 'fullname', 'city', 'training_status', 'accepted')
             ->where('fullname', $this->like, "%$search%")
             ->where('training_completed', '=', $training_completed)
             ->orderBy('id')
@@ -87,13 +89,8 @@ class StudentController extends Controller
         try {
             $validatedData = $request->validated();
             $qr_code = $this->generateQrCode();
-            $imageName = null;
-            if ($request->hasFile('image')) {
-                $fileName = $request->file('image')->getClientOriginalName();
-                $imageName = time() . '-' . $fileName;
-                $request->file('image')->move(public_path('storage/images'), $imageName);
-            }
-
+            $base64Image = null;
+            if ($request->hasFile('image')) $base64Image = base64_encode(file_get_contents($request->file('image')->path()));
 
             $data = [
                 'course_id' => $validatedData['course_id'],
@@ -119,7 +116,7 @@ class StudentController extends Controller
                 'accepted' => false,
 
                 'qr_code' => $qr_code,
-                'image' => $imageName,
+                'image' => $base64Image,
             ];
 
             StudentModel::create($data);
@@ -138,10 +135,6 @@ class StudentController extends Controller
             $student = StudentModel::findorfail($id);
             $student->delete();
 
-            if (Storage::disk('public')->exists('images/' .  $student->image)) {
-                Storage::disk('public')->delete('images/' . $student->image);
-            }
-
             Alert::success('Success', 'Student Has Been Removed');
             return redirect()->back();
         } catch (Exception $e) {
@@ -155,10 +148,6 @@ class StudentController extends Controller
         try {
             $student = StudentModel::findorfail($id);
             $student->delete();
-
-            if (Storage::disk('public')->exists('images/' .  $student->image)) {
-                Storage::disk('public')->delete('images/' . $student->image);
-            }
 
             Alert::success('Success', 'Student Has Been Removed');
             return redirect()->route('admin.students.index');
@@ -246,5 +235,16 @@ class StudentController extends Controller
         } finally {
             return redirect($request->input('previous_url'));
         }
+    }
+
+    public function changeProfile(ChangeProfileRequest $request, $id)
+    {
+        $student = StudentModel::find($id);
+        $base64Image = base64_encode(file_get_contents($request->file('image')->path()));
+
+        $data = ['image' => $base64Image];
+        $student->update($data);
+
+        return redirect()->back();
     }
 }
