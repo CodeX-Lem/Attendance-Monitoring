@@ -50,7 +50,8 @@ class TrainorAttendance extends Controller
 
         $students = StudentModel::with(['attendance' => function ($query) use ($year, $month) {
             $query->whereYear('date', $year)
-                ->whereMonth('date', $month);
+                ->whereMonth('date', $month)
+                ->select('id', 'student_id', 'date', 'status_am', 'status_pm');
         }])
             ->whereHas('course', function ($query) use ($trainorId) {
                 $query->where('trainor_id', '=', $trainorId);

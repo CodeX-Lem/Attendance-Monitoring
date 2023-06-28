@@ -57,9 +57,12 @@
                             <th scope="col">Full Name</th>
                             @for($i = 1; $i <= $days; $i++) <th scope="col" class="text-center">{{ $i }}</th>
                                 @endfor
-                                <th scope="col" class="text-nowrap">Absent AM</th>
-                                <th scope="col" class="text-nowrap">Absent PM</th>
-                                <th scope="col" class="text-nowrap">Total Days Absent</th>
+                                <th scope="col" class="text-nowrap text-danger">Absent AM</th>
+                                <th scope="col" class="text-nowrap text-danger">Absent PM</th>
+                                <th scope="col" class="text-nowrap text-danger">Total Days Absent</th>
+                                <th scope="col" class="text-nowrap text-primary">Late AM</th>
+                                <th scope="col" class="text-nowrap text-primary">Late PM</th>
+                                <th scope="col" class="text-nowrap text-primary">Total Days Late</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,6 +80,8 @@
                         @php
                         $absentAm = 0;
                         $absentPm = 0;
+                        $lateAm = 0;
+                        $latePm = 0;
                         @endphp
                         <tr>
                             <td>{{ $counter++ }}</td>
@@ -88,6 +93,8 @@
                                 if ($day == $i) {
                                 if($attendance->status_am == 'Absent') $absentAm++;
                                 if($attendance->status_pm == 'Absent') $absentPm++;
+                                if($attendance->status_am == 'Late') $lateAm++;
+                                if($attendance->status_pm == 'Late') $latePm++;
                                 $attendanceFound = true;
                                 break;
                                 }
@@ -111,9 +118,12 @@
                                 @endif
                                 @endfor
 
-                                <td class="text-center fw-bold">{{ $absentAm }}</td>
-                                <td class="text-center fw-bold">{{ $absentPm }}</td>
+                                <td class="text-center">{{ $absentAm }}</td>
+                                <td class="text-center">{{ $absentPm }}</td>
                                 <td class="text-center fw-bold">{{ ($absentAm + $absentPm) / 2 }}</td>
+                                <td class="text-center">{{ $lateAm }}</td>
+                                <td class="text-center">{{ $latePm }}</td>
+                                <td class="text-center fw-bold">{{ ($lateAm + $latePm) / 2 }}</td>
                         </tr>
                         @endforeach
                     </tbody>
