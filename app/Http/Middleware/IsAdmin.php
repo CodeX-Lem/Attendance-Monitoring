@@ -23,7 +23,6 @@ class IsAdmin
         }
 
         if (Session::get('isAdmin') == true) {
-            // View::share(['adminUsername' => config('adminCredentials.username'), 'adminPassword' => config('adminCredentials.password')]);
             return $next($request);
         } else {
             Session::forget('isAdmin');

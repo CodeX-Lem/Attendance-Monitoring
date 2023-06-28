@@ -29,10 +29,10 @@ class IsTrainor
             $course = CourseModel::where('trainor_id', '=', $trainorId)->first();
             View::share(['currentUser' => $trainor]);
             View::share(['trainingProgram' => $course]);
+            Session::put('courseId', $course->id);
             return $next($request);
         } else {
-            Session::forget('isAdmin');
-            Session::forget('trainor_id');
+            Session::flush();
             return redirect('/')->with('message', 'Only trainors can access this module');
         }
     }

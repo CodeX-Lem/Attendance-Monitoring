@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AttendanceModel;
+use App\Models\StudentModel;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -37,6 +38,29 @@ class TrainorAttendance extends Controller
             ->paginate($entries);
 
         return view('trainor.reports.index', ['attendance' => $attendance, 'dateFrom' => $dateFrom, 'dateTo' => $dateTo]);
+    }
+
+    public function monthlyReport(Request $request)
+    {
+        $year = $request->input('year', date('Y'));
+        $month = $request->input('month', date('m'));
+        $search = $request->input('search', '');
+        $days = Carbon::createFromDate($year, $month, 1)->daysInMonth;
+        $trainorId = Session::get('trainor_id');
+
+        $students = StudentModel::with(['attendance' => function ($query) use ($year, $month) {
+            $query->whereYear('date', $year)
+                ->whereMonth('date', $month);
+        }])
+            ->whereHas('course', function ($query) use ($trainorId) {
+                $query->where('trainor_id', '=', $trainorId);
+            })
+            ->where('fullname', $this->like, "%$search%")
+            ->select('id', 'fullname')
+            ->orderBy('fullname')
+            ->get();
+
+        return view('trainor.reports.monthly', ['students' => $students, 'year' => $year, 'month' => $month, 'days' => $days]);
     }
 
     public function exportPdf(Request $request)

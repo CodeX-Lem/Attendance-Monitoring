@@ -58,6 +58,7 @@ Route::prefix(('trainor'))->middleware('isTrainor')->group(function () {
     Route::get('/students/qrcode{id}', [QrCodeController::class, 'download'])->name('trainor.students.qrcode');
 
     Route::get('/reports', [TrainorAttendance::class, 'index'])->name('trainor.reports.index');
+    Route::get('/monthly-report', [TrainorAttendance::class, 'monthlyReport'])->name('trainor.reports.monthly');
     Route::get('/reports/download', [TrainorAttendance::class, 'exportPdf'])->name('trainor.reports.download');
 
     Route::post('/students/import', [ImportController::class, 'import'])->name('trainor.students.import');

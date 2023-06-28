@@ -12,10 +12,10 @@ class ImportStudents implements ToCollection
     public function collection(Collection $rows)
     {
         $this->importedData = $rows->skip(10)->map(function ($row) {
-            return $row->slice(1);
+            return $row;
         })->filter(function ($row) {
-            foreach ($row as $key => $value) {
-                if ($value) return $row;
+            foreach ($row as $index => $value) {
+                if ($index > 0) if ($value) return $row;
             }
         });
     }
