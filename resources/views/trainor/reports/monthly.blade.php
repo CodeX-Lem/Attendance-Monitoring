@@ -50,7 +50,7 @@
             </form>
 
             <div class="table-responsive mt-3">
-                <table class="table table-bordered table-striped align-middle" style="font-size: 14px;">
+                <table class="table table-bordered table-striped align-middle" style="font-size: 12px;">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -95,7 +95,7 @@
                                 @endphp
 
                                 @if($attendanceFound)
-                                <td class="text-center" style="font-size: 12px;">
+                                <td class="text-center">
                                     <div class="d-flex flex-column">
                                         <span
                                             class="text-nowrap {{ $attendance->status_am == 'On-Time' ? 'text-success' : ($attendance->status_am == 'text-primary' ? 'L' : 'text-danger') }}">{{ $attendance->status_am == 'On-Time' ? 'P' : ($attendance->status_am == 'Late' ? 'L' : 'A') }}
@@ -107,7 +107,7 @@
                                     </div>
                                 </td>
                                 @else
-                                <td class="text-center">-</td>
+                                <td class="text-center" style="font-size: 14px;">-</td>
                                 @endif
                                 @endfor
 
