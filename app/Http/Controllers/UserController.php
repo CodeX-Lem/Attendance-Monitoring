@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\ChangeAdminProfileRequest;
 use App\Http\Requests\Users\ChangePassRequest;
+use App\Http\Requests\Users\ChangeUserProfileRequest;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Models\CourseModel;
 use App\Models\UserModel;
@@ -140,6 +141,25 @@ class UserController extends Controller
         $adminUsername = Config::get('adminCredentials.username');
         $adminPassword = Config::get('adminCredentials.password');
         return view('admin.users.change-admin-profile', ['previousUrl' => $previousUrl, 'adminUsername' => $adminUsername, 'adminPassword' => $adminPassword]);
+    }
+
+    public function showChangeUserProfile()
+    {
+        $trainorId = Session::get('trainor_id');
+        $user = UserModel::where('trainor_id', $trainorId)->first();
+        return view('trainor.users.change-user-profile', ['user' => $user]);
+    }
+
+    public function changeUserProfile(ChangeUserProfileRequest $request, $id)
+    {
+        $validatedData = $request->validated();
+
+        $user = UserModel::find($id);
+        $data = ['username' => $validatedData['username'], 'password' => Hash::make($validatedData['password'])];
+        $user->update($data);
+
+        Alert::success('Success', 'User credentials has been changed');
+        return redirect()->back();
     }
 
     public function changeAdminProfile(ChangeAdminProfileRequest $request)

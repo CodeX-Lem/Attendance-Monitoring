@@ -9,8 +9,8 @@
             <li>
                 <h6 class="dropdown-header">User Account</h6>
             </li>
-            <li><a class="dropdown-item" href="">Change
-                    Credentials</a>
+            <li>
+                <a href="{{ route('trainor.user.show-change-profile') }}" class="dropdown-item">Change Credential</a>
             </li>
             <li>
             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>

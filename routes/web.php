@@ -57,11 +57,14 @@ Route::prefix(('trainor'))->middleware('isTrainor')->group(function () {
 
     Route::get('/students/qrcode{id}', [QrCodeController::class, 'download'])->name('trainor.students.qrcode');
 
-    Route::get('/reports', [TrainorAttendance::class, 'index'])->name('trainor.reports.index');
-    Route::get('/monthly-report', [TrainorAttendance::class, 'monthlyReport'])->name('trainor.reports.monthly');
+    Route::get('/time-report', [TrainorAttendance::class, 'index'])->name('trainor.reports.index');
+    Route::get('/attendance-report', [TrainorAttendance::class, 'monthlyReport'])->name('trainor.reports.monthly');
     Route::get('/reports/download', [TrainorAttendance::class, 'exportPdf'])->name('trainor.reports.download');
 
     Route::post('/students/import', [ImportController::class, 'import'])->name('trainor.students.import');
+
+    Route::get('user/change-profile', [UserController::class, 'showChangeUserProfile'])->name('trainor.user.show-change-profile');
+    Route::put('user/change-profile/{id}', [UserController::class, 'changeUserProfile'])->name('trainor.user.change-profile');
 });
 
 Route::prefix('admin')->middleware('isAdmin')->group(function () {
@@ -89,6 +92,7 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::put('/students/edit/{id}', [StudentController::class, 'update'])->name('admin.students.update');
     Route::delete('/students/reject/{id}', [StudentController::class, 'reject'])->name('admin.students.reject');
     Route::put('students/change-profile/{id}', [StudentController::class, 'changeProfile'])->name('admin.students.change-profile');
+    Route::post('/students/import', [ImportController::class, 'import'])->name('admin.students.import');
 
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
@@ -106,6 +110,8 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::get('/reports', [AdminReports::class, 'index'])->name('admin.reports.index');
+    Route::get('/time-report', [AdminReports::class, 'index'])->name('admin.reports.index');
     Route::get('/reports/download', [AdminReports::class, 'exportPdf'])->name('admin.reports.download');
+
+    Route::get('/attendance-report', [AdminReports::class, 'monthlyReport'])->name('admin.reports.monthly');
 });

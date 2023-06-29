@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AttendanceModel;
+use App\Models\CourseModel;
+use App\Models\StudentModel;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -71,5 +73,36 @@ class AdminReports extends Controller
         // $pdf->getCanvas()->page_text(550, 975, 'Page {PAGE_NUM} of {PAGE_COUNT}', null, 8, array(0, 0, 0));
 
         return $pdf->stream('attendance-report', array('Attachment' => false));
+    }
+
+
+    public function monthlyReport(Request $request)
+    {
+        $defaultCourse = CourseModel::first()->id;
+        $year = $request->input('year', date('Y'));
+        $month = $request->input('month', date('m'));
+        $courseId = $request->input('course', $defaultCourse);
+        $search = $request->input('search', '');
+        $days = Carbon::createFromDate($year, $month, 1)->daysInMonth;
+        $weekDays = [];
+        for ($day = 1; $day <= $days; $day++) {
+            $currentDay = Carbon::createFromDate($year, $month, $day);
+            $weekDays[] = $currentDay->format('D');
+        }
+
+        $students = StudentModel::with(['attendance' => function ($query) use ($year, $month) {
+            $query->whereYear('date', $year)
+                ->whereMonth('date', $month)
+                ->select('id', 'student_id', 'date', 'status_am', 'status_pm');
+        }])
+            ->whereHas('course', function ($query) use ($courseId) {
+                $query->where('id', '=', $courseId);
+            })
+            ->where('fullname', $this->like, "%$search%")
+            ->select('id', 'fullname')
+            ->orderBy('fullname')
+            ->get();
+
+        return view('admin.reports.monthly', ['students' => $students, 'year' => $year, 'month' => $month, 'days' => $days, 'weekDays' => $weekDays, 'courseId' => $courseId]);
     }
 }

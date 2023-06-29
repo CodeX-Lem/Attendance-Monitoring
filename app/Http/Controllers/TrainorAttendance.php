@@ -44,9 +44,14 @@ class TrainorAttendance extends Controller
     {
         $year = $request->input('year', date('Y'));
         $month = $request->input('month', date('m'));
+        $trainorId = Session::get('trainor_id');
         $search = $request->input('search', '');
         $days = Carbon::createFromDate($year, $month, 1)->daysInMonth;
-        $trainorId = Session::get('trainor_id');
+        $weekDays = [];
+        for ($day = 1; $day <= $days; $day++) {
+            $currentDay = Carbon::createFromDate($year, $month, $day);
+            $weekDays[] = $currentDay->format('D');
+        }
 
         $students = StudentModel::with(['attendance' => function ($query) use ($year, $month) {
             $query->whereYear('date', $year)
@@ -61,7 +66,7 @@ class TrainorAttendance extends Controller
             ->orderBy('fullname')
             ->get();
 
-        return view('trainor.reports.monthly', ['students' => $students, 'year' => $year, 'month' => $month, 'days' => $days]);
+        return view('trainor.reports.monthly', ['students' => $students, 'year' => $year, 'month' => $month, 'days' => $days, 'weekDays' => $weekDays]);
     }
 
     public function exportPdf(Request $request)

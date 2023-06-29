@@ -22,6 +22,7 @@ class ImportController extends Controller
             Excel::import($import, $request->file('student_file'));
             $importedData = $import->getImportedData()->toArray();
             $latestQrCode = $this->generateQrCode();
+            $courseId = $request->input('course', Session::get('courseId'));
             $validatedData = [];
             foreach ($importedData as $row) {
                 $rules = [
@@ -60,7 +61,7 @@ class ImportController extends Controller
                     throw new ValidationException($validator);
                 }
                 $validatedData[] = [
-                    'course_id' => Session::get('courseId'),
+                    'course_id' => $courseId,
                     'qr_code' => $latestQrCode++,
                     'first_name' => $row[2],
                     'middle_name' => $row[3],

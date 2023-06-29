@@ -1,10 +1,10 @@
-@extends('trainor.layouts.layout')
+@extends('admin.layouts.layout')
 @section('title','Reports')
 @section('content')
 <div class="p-0 p-sm-4">
     <div class="border bg-white p-0 p-sm-3">
         <div class="container-fluid">
-            <form action="{{ route('trainor.reports.monthly') }}" method="GET" class="row gx-2 mt-3 mt-sm-0">
+            <form action="{{ route('admin.reports.monthly') }}" method="GET" class="row g-2 mt-3 mt-sm-0">
                 <div class="col-auto">
                     <select class="form-select form-select-sm rounded-0 shadow-none" name="year" onchange="this.form.submit()">
                         @for($i = 2023; $i <= 2050; $i++) <option value="{{ $i }}" @if($year==$i) selected @endif>
@@ -31,8 +31,16 @@
                     </select>
                 </div>
 
+                <div class="col-auto">
+                    <select class="form-select form-select-sm rounded-0 shadow-none" name="course" onchange="this.form.submit()">
+                        @foreach($courses as $course)
+                        <option value="{{ $course->id }}" @if($course->id == $courseId) selected @endif>{{ $course->course }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="col-md-6">
-                    <div class="input-group input-group-sm mt-2 mt-md-0">
+                    <div class="input-group input-group-sm">
                         <input type="text" class="form-control shadow-none rounded-0" placeholder="Search any student" name="search" autocomplete="off" autofocus value="{{ request('search') }}">
                         <button type="submit" class="btn btn-success d-inline-flex align-items-center gap-2 rounded-0">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">

@@ -155,7 +155,7 @@
                 @foreach($attendance as $row)
                 <tr>
                     <td>{{$counter++}}</td>
-                    <td>{{ date('F d, Y', strtotime($row->date)); }}</td>
+                    <td style="white-space: nowrap;">{{ date('M d, Y', strtotime($row->date)); }}</td>
                     <td>{{$row->student->fullname}}</td>
                     <td>{{ $row->student->course->course }}</td>
                     <td class="nowrap">{{ $row->time_in_am ? date('h:i A', strtotime($row->time_in_am)) : '' }}</td>
