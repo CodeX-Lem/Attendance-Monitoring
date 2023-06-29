@@ -72,7 +72,7 @@ class AttendanceController extends Controller
 
         // DISPLAY ERROR MESSAGE IF STUDENT TRIES TO TIME OUT IN AM IN LESS THAN 12:00 PM
         if ($attendance->time_in_am != null & $attendance->time_out_am == null & $currentTime < $timeOutAm) {
-            return response()->json(['student' => $student, 'status' => 'You cannot time out yet in AM']);
+            return response()->json(['student' => $student, 'status' => 'You cannot time out yet in AM'], 201);
         }
 
         // TIME OUT THE STUDENT IN AM IF ALREADY TIMED IN AND CURRENT TIME IS BETWEEN 12:00 PM AND 01:30 PM

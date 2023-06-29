@@ -186,30 +186,17 @@
             const currentTimeElement = document.getElementById("current-time");
 
             function getCurrentTime() {
-                var currentTime = new Date();
+                const time = new Date();
+                return time.toLocaleString('en-PH', {
+                    hour: 'numeric',
+                    minute: "numeric",
+                    second: "numeric",
+                    hour12: true
+                });
+            }
 
-                var hours = currentTime.getHours();
-                var minutes = currentTime.getMinutes();
-                var seconds = currentTime.getSeconds();
-                var meridiem = "AM";
-
-                // Convert to 12-hour format
-
-                if (hours > 12) {
-                    hours = hours - 12;
-                    if (hours >= 1 && hours < 12) meridiem = "PM";
-                }
-
-                // Pad single digits with leading zeros
-                hours = addLeadingZero(hours);
-                minutes = addLeadingZero(minutes);
-                seconds = addLeadingZero(seconds);
-
-                // Construct the formatted time string
-                var formattedTime =
-                    hours + ":" + minutes + ":" + seconds + " " + meridiem;
-
-                return formattedTime;
+            function padZero(value) {
+                return value < 10 ? "0" + value : value;
             }
 
             function addLeadingZero(number) {
