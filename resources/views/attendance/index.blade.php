@@ -6,6 +6,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Attendance Tracker - NOLITC</title>
 
     <link rel="stylesheet" href="/styles.css" />
@@ -23,7 +24,7 @@
 
         .right1 {
             /* background-color: #99cc99; */
-            border-left: 1px solid rgba(0, 0, 0, 0.1);
+            border-left: 2px solid rgba(0, 0, 0, 0.2);
         }
 
         .ngalan {
@@ -108,7 +109,8 @@
 
 <body class="d-flex justify-content-center align-items-center flex-column">
     <div class="marquee-container bg-success">
-        <h3 class="marquee py-1 px-2 text-white">LIKE US ON FACEBOOK: https://www.facebook.com/nolitcinspire</h3>
+        <h3 class="marquee py-1 px-2 text-white text-nowrap">LIKE US ON FACEBOOK: https://www.facebook.com/nolitcinspire
+        </h3>
     </div>
     <div class="container">
         <div class="row gx-0 rounded" style="box-shadow: 0 0 3px rgba(0,0,0,0.5); background: #ededed;">
@@ -132,51 +134,32 @@
             <div class="col-md-6">
                 <div class="right1 h-100 p-5">
                     <div class="profile d-flex justify-content-center">
-                        @if(isset($student))
                         <div class="mb-3" style="width: 15vw; height:15vw;  min-width: 100px; min-height: 100px;">
-                            @if($student->image)
-                            <img src="data:image/jpeg;base64,{{ $student->image }}" alt="Profile Picture" class="w-100 h-100 object-fit-cover" />
-                            @else
-                            <img src="{{ asset('no-image.png') }}" alt="Profile Picture" class="w-100 h-100 object-fit-cover" />
-                            @endif
+                            <img src="{{asset('user.png')}}" alt="Profile Picture" class="w-100 h-100 object-fit-cover profile-pic" />
                         </div>
-                        @else
-                        <div class="mb-3" style="width: 15vw; height:15vw;  min-width: 100px; min-height: 100px;">
-                            <img src="{{asset('user.png')}}" alt="Profile Picture" class="w-100 h-100 object-fit-cover" />
-                        </div>
-                        @endif
                     </div>
 
-                    <form action="{{ route('attendance.scan') }}" method="POST">
+                    <form id="scan-form">
                         <div class="student1 border-bottom">
-                            @csrf
                             <p class="text-center">
                                 <span class="fw-bold ngalan fs-2 d-flex flex-column">
-                                    @if(isset($student))
-                                    {{ $student->fullname }}
-                                    @endif
+                                    Welcome to NOLITC
                                 </span>
-
-                                <span class="fs-3 text-white fw-normal curso"></span>
                             </p>
                         </div>
                         <!-- scanner -->
                         <div class="scanner-input mb-4">
-                            <input type="text" class="form-control p-1 fs-3 shadow-none rounded-0" name="qr_code" placeholder="Scan your QR Code here" autofocus autocomplete="off" />
+                            <input type="text" class="form-control p-1 fs-3 shadow-none rounded-0" name="qr_code" id="qr-code" placeholder="Scan your QR Code here" autofocus autocomplete="off" />
                         </div>
                     </form>
 
                     <!-- Status -->
                     <div class="status1">
-                        @if(isset($status) && isset($timeInStatus))
-                        <p class="fs-5 text-center text-light py-2 px-3 {{ $timeInStatus == 'On-Time' ? 'bg-success' : ($timeInStatus == 'Late' ? 'bg-primary' : 'bg-danger') }}">
-                            {{ $status }}
+                        <p class="d-none status-success fs-5 text-center text-light py-2 px-3">
                         </p>
-                        @elseif(isset($status) && !isset($timeInStatus))
-                        <p class="fs-5 text-center py-2 px-3 text-bg-warning">
-                            {{ $status }}
+                        <p class="status-error fs-5 text-center py-2 px-3 text-bg-warning">
+                            Please scan your qr code for attendance
                         </p>
-                        @endif
                     </div>
                     <!-- legends -->
                     <div class="col">
@@ -191,6 +174,10 @@
             </div>
         </div>
     </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -207,9 +194,10 @@
                 var meridiem = "AM";
 
                 // Convert to 12-hour format
+
                 if (hours > 12) {
                     hours = hours - 12;
-                    meridiem = "PM";
+                    if (hours >= 1 && hours < 12) meridiem = "PM";
                 }
 
                 // Pad single digits with leading zeros
@@ -269,7 +257,69 @@
             setInterval(displayClock, 1000);
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+    <script>
+        document.querySelector('#scan-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content');
+            const formData = new FormData(e.target);
+            const url = "{{ route('attendance.scan') }}";
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                    }
+                });
+
+                const data = await response.json();
+                document.querySelector('#qr-code').value = "";
+                if (response.status == 200) {
+                    document.querySelector('.status-success').classList.remove('d-none');
+                    document.querySelector('.status-error').classList.add('d-none');
+                    const statusElement = document.querySelector('.status-success');
+                    statusElement.classList.remove('bg-success');
+                    statusElement.classList.remove('bg-primary');
+                    statusElement.classList.remove('bg-late');
+
+                    if (data.timeInStatus == 'On-Time') {
+                        statusElement.classList.add('bg-success');
+                    } else if (data.timeInStatus == 'Late') {
+                        statusElement.classList.add('bg-primary');
+                    } else if (data.timeInStatus == 'Absent') {
+                        statusElement.classList.add('bg-danger');
+                    }
+
+                    statusElement.textContent = data.status;
+                    document.querySelector('.ngalan').textContent = data.student.fullname;
+                    if (data.student.image) {
+                        document.querySelector('.profile-pic').src =
+                            `data:image/jpeg;base64,${data.student.image}`;
+                    }
+                } else if (response.status == 404) {
+                    document.querySelector('.status-success').classList.add('d-none');
+                    document.querySelector('.status-error').classList.remove('d-none');
+                    document.querySelector('.status-error').textContent = data.status;
+                    document.querySelector('.profile-pic').src = "{{ asset('user.png') }}";
+                    document.querySelector('.ngalan').textContent = "Invalid QR Code";
+                } else if (response.status == 201) {
+                    document.querySelector('.status-success').classList.add('d-none');
+                    document.querySelector('.status-error').classList.remove('d-none');
+                    document.querySelector('.status-error').textContent = data.status;
+                    document.querySelector('.ngalan').textContent = data.student.fullname;
+                    if (data.student.image) {
+                        document.querySelector('.profile-pic').src =
+                            `data:image/jpeg;base64,${data.student.image}`;
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error: ', error)
+            }
+        });
+    </script>
 </body>
 
 </html>

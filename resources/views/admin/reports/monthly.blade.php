@@ -6,7 +6,8 @@
         <div class="container-fluid">
             <form action="{{ route('admin.reports.monthly') }}" method="GET" class="row g-2 mt-3 mt-sm-0">
                 <div class="col-auto">
-                    <select class="form-select form-select-sm rounded-0 shadow-none" name="year" onchange="this.form.submit()">
+                    <select class="form-select form-select-sm rounded-0 shadow-none" name="year"
+                        onchange="this.form.submit()">
                         @for($i = 2023; $i <= 2050; $i++) <option value="{{ $i }}" @if($year==$i) selected @endif>
                             {{ $i }}
                             </option>
@@ -15,7 +16,8 @@
                 </div>
 
                 <div class="col-auto">
-                    <select class="form-select form-select-sm rounded-0 shadow-none" name="month" onchange="this.form.submit()">
+                    <select class="form-select form-select-sm rounded-0 shadow-none" name="month"
+                        onchange="this.form.submit()">
                         <option value="1" @if($month==1) selected @endif>January</option>
                         <option value="2" @if($month==2) selected @endif>February</option>
                         <option value="3" @if($month==3) selected @endif>March</option>
@@ -32,19 +34,24 @@
                 </div>
 
                 <div class="col-auto">
-                    <select class="form-select form-select-sm rounded-0 shadow-none" name="course" onchange="this.form.submit()">
+                    <select class="form-select form-select-sm rounded-0 shadow-none" name="course"
+                        onchange="this.form.submit()">
                         @foreach($courses as $course)
-                        <option value="{{ $course->id }}" @if($course->id == $courseId) selected @endif>{{ $course->course }}</option>
+                        <option value="{{ $course->id }}" @if($course->id == $courseId) selected
+                            @endif>{{ $course->course }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="col-md-6">
                     <div class="input-group input-group-sm">
-                        <input type="text" class="form-control shadow-none rounded-0" placeholder="Search any student" name="search" autocomplete="off" autofocus value="{{ request('search') }}">
+                        <input type="text" class="form-control shadow-none rounded-0" placeholder="Search any student"
+                            name="search" autocomplete="off" autofocus value="{{ request('search') }}">
                         <button type="submit" class="btn btn-success d-inline-flex align-items-center gap-2 rounded-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                             </svg>
                             <span>Search</span>
                         </button>
@@ -65,11 +72,11 @@
                                 </div>
                                 </th>
                                 @endfor
-                                <th scope="col" class="text-nowrap text-danger">Absent AM</th>
-                                <th scope="col" class="text-nowrap text-danger">Absent PM</th>
+                                <th scope="col" class="text-nowrap text-danger">Total Absent AM</th>
+                                <th scope="col" class="text-nowrap text-danger">Total Absent PM</th>
                                 <th scope="col" class="text-nowrap text-danger">Total Days Absent</th>
-                                <th scope="col" class="text-nowrap text-primary">Late AM</th>
-                                <th scope="col" class="text-nowrap text-primary">Late PM</th>
+                                <th scope="col" class="text-nowrap text-primary">Total Late AM</th>
+                                <th scope="col" class="text-nowrap text-primary">Total Late PM</th>
                                 <th scope="col" class="text-nowrap text-primary">Total Days Late</th>
                         </tr>
                     </thead>
@@ -112,10 +119,12 @@
                                 @if($attendanceFound)
                                 <td class="text-center">
                                     <div class="d-flex flex-column">
-                                        <span class="text-nowrap {{ $attendance->status_am == 'On-Time' ? 'text-success' : ($attendance->status_am == 'Late' ? 'text-primary' : 'text-danger') }}">{{ $attendance->status_am == 'On-Time' ? 'P' : ($attendance->status_am == 'Late' ? 'L' : 'A') }}
+                                        <span
+                                            class="text-nowrap {{ $attendance->status_am == 'On-Time' ? 'text-success' : ($attendance->status_am == 'Late' ? 'text-primary' : 'text-danger') }}">{{ $attendance->status_am == 'On-Time' ? 'P' : ($attendance->status_am == 'Late' ? 'L' : 'A') }}
                                             - AM</span>
 
-                                        <span class="text-nowrap {{ $attendance->status_pm == 'On-Time' ? 'text-success' : ($attendance->status_pm == 'Late' ? 'text-primary' : 'text-danger') }}">{{ $attendance->status_pm == 'On-Time' ? 'P' : ($attendance->status_pm == 'Late' ? 'L' : 'A') }}
+                                        <span
+                                            class="text-nowrap {{ $attendance->status_pm == 'On-Time' ? 'text-success' : ($attendance->status_pm == 'Late' ? 'text-primary' : 'text-danger') }}">{{ $attendance->status_pm == 'On-Time' ? 'P' : ($attendance->status_pm == 'Late' ? 'L' : 'A') }}
                                             - PM</span>
                                     </div>
                                 </td>
@@ -140,7 +149,7 @@
 </div>
 
 <script>
-    const searchInput = document.querySelector("input[name='search']");
-    searchInput.selectionStart = searchInput.selectionEnd = searchInput.value.length;
+const searchInput = document.querySelector("input[name='search']");
+searchInput.selectionStart = searchInput.selectionEnd = searchInput.value.length;
 </script>
 @endsection

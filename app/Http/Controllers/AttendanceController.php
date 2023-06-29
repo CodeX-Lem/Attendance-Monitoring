@@ -20,7 +20,7 @@ class AttendanceController extends Controller
 
         $student = StudentModel::where('qr_code', $qrCode)->first();
 
-        if (!$student) return view('attendance.index')->with('status', 'Student Not Found');
+        if (!$student) return response()->json(['status' => 'Student Not Found'], 404);
 
         if ($this->hasTakenAttendance($student->course_id)) {
             return $this->updateAttendance($student);
@@ -33,7 +33,7 @@ class AttendanceController extends Controller
     private function updateAttendance($student)
     {
         $today = Carbon::today()->toDateString();
-        $timeInAm = strtotime('08:30 AM');
+        $timeInAm = strtotime('09:30 AM');
         $timeOutAm = strtotime('12:00 PM');
         $timeInPm = strtotime('01:30 PM');
         $timeOutPm = strtotime('05:00 PM');
@@ -66,12 +66,13 @@ class AttendanceController extends Controller
                 'status_am' => $status
             ];
             $attendance->update($data);
-            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in ' . $status, 'timeInStatus' => $status]);
+
+            return response()->json(['student' => $student, 'status' => 'You are now timed in ' . $status, 'timeInStatus' => $status]);
         }
 
         // DISPLAY ERROR MESSAGE IF STUDENT TRIES TO TIME OUT IN AM IN LESS THAN 12:00 PM
         if ($attendance->time_in_am != null & $attendance->time_out_am == null & $currentTime < $timeOutAm) {
-            return view('attendance.index')->with('status', 'You cannot time out yet in AM');
+            return response()->json(['student' => $student, 'status' => 'You cannot time out yet in AM']);
         }
 
         // TIME OUT THE STUDENT IN AM IF ALREADY TIMED IN AND CURRENT TIME IS BETWEEN 12:00 PM AND 01:30 PM
@@ -80,13 +81,14 @@ class AttendanceController extends Controller
                 'time_out_am' => Carbon::now()->toTimeString(),
             ];
             $attendance->update($data);
-            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed out']);
+
+            return response()->json(['student' => $student, 'status' => 'You are now timed out'], 201);
         }
 
 
         // DISPLAY ERROR MESSAGE IF STUDENT HAS ALREADY TIMED OUT IN PM
         if ($attendance->time_in_pm != null && $attendance->time_out_pm != null) {
-            return view('attendance.index', ['student' => $student, 'status' => 'You already timed out in PM']);
+            return response()->json(['student' => $student, 'status' => 'You already timed out in PM'], 201);
         }
 
         // TIME IN THE STUDENT IN PM IF NOT TIMED IN AND CURRENT TIME IS GREATER THAN 12:00 PM
@@ -105,12 +107,13 @@ class AttendanceController extends Controller
                 'status_pm' => $status
             ];
             $attendance->update($data);
-            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed in ' . $status, 'timeInStatus' => $status]);
+
+            return response()->json(['student' => $student, 'status' => 'You are now timed in ' . $status, 'timeInStatus' => $status]);
         }
 
         // DISPLAY ERROR MESSAGE IF STUDENT TRIES TO TIME OUT IN LESS THAN 05:00 PM
         if ($attendance->time_in_pm != null && $attendance->time_out_pm == null && $currentTime < $timeOutPm) {
-            return view('attendance.index')->with('status', 'You cannot time out yet in PM');
+            return response()->json(['student' => $student, 'status' => 'You cannot time out yet in PM'], 201);
         }
 
         if ($attendance->time_in_pm != null && $attendance->time_out_pm == null && $currentTime >= $timeOutPm) {
@@ -118,7 +121,8 @@ class AttendanceController extends Controller
                 'time_out_pm' => Carbon::now()->toTimeString(),
             ];
             $attendance->update($data);
-            return view('attendance.index', ['student' => $student, 'status' => 'You are now timed out']);
+
+            return response()->json(['student' => $student, 'status' => 'You are now timed out'], 201);
         }
     }
 
