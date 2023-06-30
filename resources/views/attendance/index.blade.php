@@ -95,6 +95,42 @@
             top: 0;
         }
 
+        .loader-container {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+            pointer-events: none;
+        }
+
+        .loader {
+            pointer-events: none;
+            border: 16px solid #f3f3f3;
+            /* Light grey */
+            border-top: 16px solid #3498db;
+            /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         @keyframes marquee {
             0% {
                 transform: translateX(100%);
@@ -175,7 +211,9 @@
         </div>
     </div>
 
-
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
     </script>
 
@@ -246,6 +284,14 @@
     </script>
 
     <script>
+        function showLoader() {
+            document.querySelector(".loader-container").style.display = "flex";
+        }
+
+        function hideLoader() {
+            document.querySelector(".loader-container").style.display = "none";
+        }
+
         document.querySelector('#scan-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content');
@@ -253,6 +299,7 @@
             const url = "{{ route('attendance.scan') }}";
 
             try {
+                showLoader();
                 const response = await fetch(url, {
                     method: 'POST',
                     body: formData,
@@ -304,6 +351,8 @@
 
             } catch (error) {
                 console.error('Error: ', error)
+            } finally {
+                hideLoader();
             }
         });
     </script>
