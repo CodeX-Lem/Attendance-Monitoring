@@ -21,6 +21,8 @@ class AttendanceController extends Controller
         $student = StudentModel::where('qr_code', $qrCode)->first();
 
         if (!$student) return response()->json(['status' => 'Student Not Found'], 404);
+        $accepted = $student->accepted;
+        if (!$accepted) return response()->json(['student' => $student, 'status' => 'Student has not yet accepted'], 201);
 
         if ($this->hasTakenAttendance($student->course_id)) {
             return $this->updateAttendance($student);

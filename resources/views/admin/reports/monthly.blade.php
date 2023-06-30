@@ -109,9 +109,11 @@
                         $lateAm = 0;
                         $latePm = 0;
                         @endphp
-                        <tr class="row-item" onclick="makeActive(this)">
-                            <td>{{ $counter++ }}</td>
-                            <td class="text-nowrap">{{ $student->fullname }}</td>
+                        <tr class="row-item position-relative" onclick="makeActive(this)">
+                            <td style="position: sticky; left:0;">
+                                {{ $counter++ }}
+                            </td>
+                            <td style="position: sticky; left:30px;" class="text-nowrap">{{ $student->fullname }}</td>
 
                             @for($i = 1; $i <= $days; $i++) @php $attendanceFound=false; foreach ($student->
                                 attendance

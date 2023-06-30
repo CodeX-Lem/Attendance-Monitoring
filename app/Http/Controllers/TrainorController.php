@@ -68,7 +68,7 @@ class TrainorController extends Controller
 
             Alert::success('Success', 'New trainor has been added');
         } catch (Exception $e) {
-            Alert::error('Error', 'An error occured while removing the trainor');
+            Alert::error('Error', 'An error occured while adding the trainor');
         } finally {
             return redirect($request->input('previous_url'));
         }
