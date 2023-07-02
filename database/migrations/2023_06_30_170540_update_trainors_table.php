@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('trainors', function (Blueprint $table) {
+            $table->dropIndex('trainors_fullname_index');
             $table->string('fullname')->unique()->change();
         });
     }

@@ -7,6 +7,7 @@
     height: 100vh;
     position: fixed;
     left: 0;
+    top: 0;
     background-color: #222d32;
 }
 
@@ -29,18 +30,28 @@
 
 .content {
     margin-left: 280px;
+    height: calc(100vh - 90px);
+    margin-top: 50px;
 }
 
 .header {
     background-color: #3c8dbc;
-}
-
-.content {
-    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    height: 50px;
+    margin-left: 280px;
+    width: calc(100vw - 280px);
+    z-index: 999;
 }
 
 .footer {
     background-color: #ddd;
+    position: fixed;
+    bottom: 0;
+    height: 40px;
+    margin-left: 280px;
+    width: calc(100vw - 280px);
+    z-index: 999;
 }
 
 .dropdown-item:hover {
@@ -58,13 +69,65 @@
     color: #fff;
 }
 
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-right: 1px solid #ddd;
+}
+
+td,
+th {
+    border-left: 1px solid #ddd;
+}
+
+thead tr:first-child th{
+    border-top: 1px solid #ddd;
+}
+
+tbody tr th, tbody tr td{
+    background-color: transparent!important;
+}
+
+tbody tr:hover{
+    background-color: #eee!important;
+}
+
+tbody tr:hover .sticky-left{
+    background-color: #eee!important;
+}
+
+.row-item.active{
+    background-color: #eee!important;
+}
+
+.row-item.active .sticky-left{
+    background-color: #eee!important;
+}
+
+.sticky-left {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: #fff!important;
+}
+
+.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
 @media screen and (max-width: 768px) {
     .sidebar {
         width: 90px;
     }
 
-    .content {
+    .content,.header,.footer {
         margin-left: 90px;
+    }
+
+    .header, .footer{
+        width: calc(100vw - 90px);
     }
 
     .logo-img {
